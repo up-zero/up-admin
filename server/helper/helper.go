@@ -16,11 +16,12 @@ func Md5(s string) string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(s)))
 }
 
-func GenerateToken(id uint, identity, name string, expireAt int64) (string, error) {
+func GenerateToken(id uint, identity, name, roleIdentity string, expireAt int64) (string, error) {
 	uc := define.UserClaim{
-		Id:       id,
-		Identity: identity,
-		Name:     name,
+		Id:           id,
+		Identity:     identity,
+		Name:         name,
+		RoleIdentity: roleIdentity,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireAt,
 		},

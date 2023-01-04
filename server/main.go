@@ -11,6 +11,8 @@ func main() {
 	define.InitEnv()
 	// 初始化 gorm.DB
 	models.NewGormDB()
+	// 初始化 redis.Client
+	models.NewRedisDB()
 
 	r := router.App()
 	r.Run(define.Port)
