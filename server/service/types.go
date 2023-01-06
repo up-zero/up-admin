@@ -36,4 +36,7 @@ type UserInfoReply struct {
 	RoleName string `json:"role_name"` // 角色名称
 }
 
-// username, user_basic.phone, user_basic.avatar, rb.name
+type UserPasswordChangeRequest struct {
+	OldPassword string `json:"old_password"` // 旧密码
+	NewPassword string `json:"new_password"` // 新密码
+}

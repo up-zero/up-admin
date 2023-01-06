@@ -51,3 +51,16 @@ func TestUserInfo(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 修改密码
+func TestUserPasswordChange(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"old_password": "654321",
+		"new_password": "123456",
+	})
+	resp, err := helper.HttpPut(baseURL+"/user/password/change", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}

@@ -10,8 +10,8 @@ import (
 	"net/http"
 )
 
-// Password 用户名密码登录
-func Password(c *gin.Context) {
+// LoginPassword 用户名密码登录
+func LoginPassword(c *gin.Context) {
 	in := new(LoginPasswordRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
