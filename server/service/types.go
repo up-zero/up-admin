@@ -28,3 +28,12 @@ type MenuReply struct {
 		Sort     int    `json:"sort"`
 	} `json:"sub_menus"`
 }
+
+type UserInfoReply struct {
+	Username string `json:"username"`  // 用户名
+	Phone    string `json:"phone"`     // 手机号
+	Avatar   string `json:"avatar"`    // 头像
+	RoleName string `json:"role_name"` // 角色名称
+}
+
+// username, user_basic.phone, user_basic.avatar, rb.name

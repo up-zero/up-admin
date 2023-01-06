@@ -12,6 +12,7 @@ type UserBasic struct {
 	Phone        string    `gorm:"column:phone;type:varchar(20);" json:"phone"`
 	WxUnionId    string    `gorm:"column:wx_union_id;type:varchar(255);" json:"wx_union_id"`
 	WxOpenId     string    `gorm:"column:wx_open_id;type:varchar(255);" json:"wx_open_id"`
+	Avatar       string    `gorm:"column:avatar;type:varchar(255);" json:"avatar"` // 头像
 }
 
 func (table *UserBasic) TableName() string {
@@ -23,4 +24,12 @@ func GetUserBasicByUsernamePassword(username, password string) (*UserBasic, erro
 	data := new(UserBasic)
 	err := DB.Where("username = ? AND password = ?", username, password).First(data).Error
 	return data, err
+}
+
+// GetUserInfo 获取用户详情
+func GetUserInfo(identity string) *gorm.DB {
+	tx := DB.Debug().Model(new(UserBasic)).Select("user_basic.username, user_basic.phone, user_basic.avatar, rb.name role_name").
+		Joins("LEFT JOIN role_basic rb ON rb.identity = user_basic.role_identity").
+		Where("user_basic.identity = ?", identity)
+	return tx
 }

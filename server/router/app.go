@@ -18,6 +18,8 @@ func App() *gin.Engine {
 
 	// 获取菜单列表
 	loginAuth.GET("/menus", service.Menus)
+	// 获取用户信息
+	loginAuth.GET("/user/info", service.Info)
 
 	return r
 }

@@ -10,7 +10,7 @@ import (
 
 var (
 	baseURL = "http://localhost:9090"
-	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIiLCJOYW1lIjoiZ2V0IiwiUm9sZUlkZW50aXR5IjoiMSIsImV4cCI6MTY3MzQyOTU4OH0.LoH4-MpSJV2xMAqF2cNEvjIqnNRDnnPESqhuuaodiHw"
+	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjczNTc2MDgwfQ.8cPee9lesBixMppPDh6TpTyftaL-NQq18PGGBhYjvNw"
 	header  []byte
 )
 
@@ -37,6 +37,15 @@ func TestLoginPassword(t *testing.T) {
 // 获取菜单列表
 func TestMenus(t *testing.T) {
 	resp, err := helper.HttpGet(baseURL+"/menus", header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 获取用户信息
+func TestUserInfo(t *testing.T) {
+	resp, err := helper.HttpGet(baseURL+"/user/info", header...)
 	if err != nil {
 		t.Fatal(err)
 	}
