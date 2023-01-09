@@ -64,3 +64,12 @@ func TestUserPasswordChange(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// test
+func TestSysTest(t *testing.T) {
+	resp, err := helper.HttpGet(baseURL+"/test", header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}

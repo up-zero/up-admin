@@ -4,6 +4,7 @@ import (
 	"gitee.com/up-zero/up-admin/middleware"
 	"gitee.com/up-zero/up-admin/service"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func App() *gin.Engine {
@@ -22,6 +23,15 @@ func App() *gin.Engine {
 	loginAuth.GET("/user/info", service.UserInfo)
 	// 修改密码
 	loginAuth.PUT("/user/password/change", service.UserPasswordChange)
+
+	// 会鉴权的接口
+	auth := loginAuth.Use(middleware.FuncAuthCheck())
+	auth.GET("/test", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 200,
+			"msg":  "Success",
+		})
+	})
 
 	return r
 }

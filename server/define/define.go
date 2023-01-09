@@ -29,6 +29,8 @@ var (
 	RedisRoleAdminPrefix = "ADMIN-"
 	// RedisMenuPrefix 菜单的前缀
 	RedisMenuPrefix = "MENU-"
+	// RedisFuncPrefix 功能的前缀
+	RedisFuncPrefix = "FUNC-"
 )
 
 func InitEnv() {
