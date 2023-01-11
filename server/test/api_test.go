@@ -65,9 +65,9 @@ func TestUserPasswordChange(t *testing.T) {
 	fmt.Printf("%s\n", resp)
 }
 
-// test
-func TestSysTest(t *testing.T) {
-	resp, err := helper.HttpGet(baseURL+"/test", header...)
+// 角色列表
+func TestSetRoleList(t *testing.T) {
+	resp, err := helper.HttpGet(baseURL+"/set/role/list/?page=1", header...)
 	if err != nil {
 		t.Fatal(err)
 	}

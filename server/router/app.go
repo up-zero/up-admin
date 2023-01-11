@@ -26,6 +26,11 @@ func App() *gin.Engine {
 
 	// 会鉴权的接口
 	auth := loginAuth.Use(middleware.FuncAuthCheck())
+
+	// 设置
+	// 角色列表
+	auth.GET("/set/role/list", service.SetRoleList)
+	// TODO：角色管理、菜单功能管理
 	auth.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 200,

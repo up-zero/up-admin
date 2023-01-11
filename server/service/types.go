@@ -1,5 +1,15 @@
 package service
 
+// ------------- COMMON -------------
+
+type QueryRequest struct {
+	Page    int    `json:"page" form:"page"`
+	Size    int    `json:"size" form:"size"`
+	KeyWord string `json:"key_word" form:"key_word"`
+}
+
+// ------------- COMMON -------------
+
 type LoginPasswordRequest struct {
 	Username string `json:"username"` // 用户名
 	Password string `json:"password"` // 密码
@@ -39,4 +49,17 @@ type UserInfoReply struct {
 type UserPasswordChangeRequest struct {
 	OldPassword string `json:"old_password"` // 旧密码
 	NewPassword string `json:"new_password"` // 新密码
+}
+
+type SetRoleListRequest struct {
+	*QueryRequest
+}
+
+type SetRoleListReply struct {
+	Identity  string `json:"identity"`
+	Name      string `json:"name"`
+	Sort      int    `json:"sort"`
+	IsAdmin   int    `json:"is_admin"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
