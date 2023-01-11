@@ -63,3 +63,8 @@ type SetRoleListReply struct {
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }
+
+type SetRoleUpdateAdminRequest struct {
+	Identity string `json:"identity"` // 角色唯一标识
+	IsAdmin  int    `json:"is_admin"` // 是否是超管【0-否 1-是】
+}

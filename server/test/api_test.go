@@ -73,3 +73,16 @@ func TestSetRoleList(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 修改角色的管理员身份
+func TestSetRoleUpdateAdmin(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"identity": "1",
+		"is_admin": 1,
+	})
+	resp, err := helper.HttpPut(baseURL+"/set/role/update/admin", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
