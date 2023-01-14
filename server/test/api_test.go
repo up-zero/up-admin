@@ -10,7 +10,7 @@ import (
 
 var (
 	baseURL = "http://localhost:9090"
-	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjczNTc2MDgwfQ.8cPee9lesBixMppPDh6TpTyftaL-NQq18PGGBhYjvNw"
+	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjc0MjgwNzY4fQ.wxIcCx-2BSpZBTXGLjYUYCN-NtOdNSBuK3hp71-620g"
 	header  []byte
 )
 
@@ -81,6 +81,22 @@ func TestSetRoleUpdateAdmin(t *testing.T) {
 		"is_admin": 1,
 	})
 	resp, err := helper.HttpPut(baseURL+"/set/role/update/admin", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 新增角色
+func TestSetRoleCreate(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"name":            "新增角色测试",
+		"sort":            0,
+		"is_admin":        0,
+		"menu_identities": []string{"1", "2"},
+		"func_identities": []string{"1"},
+	})
+	resp, err := helper.HttpPost(baseURL+"/set/role/create", data, header...)
 	if err != nil {
 		t.Fatal(err)
 	}

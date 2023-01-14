@@ -68,3 +68,11 @@ type SetRoleUpdateAdminRequest struct {
 	Identity string `json:"identity"` // 角色唯一标识
 	IsAdmin  int    `json:"is_admin"` // 是否是超管【0-否 1-是】
 }
+
+type SetRoleCreateRequest struct {
+	Name           string   `json:"name"`
+	Sort           int64    `json:"sort"`
+	IsAdmin        int8     `json:"is_admin"`
+	MenuIdentities []string `json:"menu_identities"` // 被授权的菜单列表
+	FuncIdentities []string `json:"func_identities"` // 被授权的功能列表
+}

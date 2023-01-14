@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"gitee.com/up-zero/up-admin/define"
 	"github.com/dgrijalva/jwt-go"
+	uuid "github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -112,4 +113,8 @@ func RFC3339ToNormalTime(rfc3339 string) string {
 		return rfc3339
 	}
 	return strings.Split(rfc3339, "T")[0] + " " + strings.Split(rfc3339, "T")[1][:8]
+}
+
+func UUID() string {
+	return uuid.NewV4().String()
 }

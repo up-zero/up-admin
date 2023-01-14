@@ -32,6 +32,8 @@ func App() *gin.Engine {
 	auth.GET("/set/role/list", service.SetRoleList)
 	// 修改角色的管理员身份
 	auth.PUT("/set/role/update/admin", service.SetRoleUpdateAdmin)
+	// 新增角色
+	auth.POST("/set/role/create", service.SetRoleCreate)
 	// TODO：角色管理、菜单功能管理
 	auth.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
