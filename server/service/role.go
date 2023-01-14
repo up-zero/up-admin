@@ -209,3 +209,48 @@ func SetRoleCreate(c *gin.Context) {
 		"msg":  "创建成功",
 	})
 }
+
+// SetRoleDelete 角色删除
+func SetRoleDelete(c *gin.Context) {
+	identity := c.Query("identity")
+	if identity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "必填参不能为空",
+		})
+		return
+	}
+	// 判断当前角色是否已关联用户
+	var cnt int64
+	err := models.DB.Model(new(models.UserBasic)).Where("role_identity = ?", identity).Count(&cnt).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	if cnt > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "当前角色存在关联的用户，不可删除",
+		})
+		return
+	}
+	// 删除角色
+	err = models.DB.Where("identity = ?", identity).Delete(new(models.RoleBasic)).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "删除成功",
+	})
+}

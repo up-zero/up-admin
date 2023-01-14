@@ -102,3 +102,12 @@ func TestSetRoleCreate(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 删除角色
+func TestSetRoleDelete(t *testing.T) {
+	resp, err := helper.HttpDelete(baseURL+"/set/role/delete?identity=1", []byte{}, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
