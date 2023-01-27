@@ -10,7 +10,7 @@ import (
 
 var (
 	baseURL = "http://localhost:9090"
-	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjc0MjgwNzY4fQ.wxIcCx-2BSpZBTXGLjYUYCN-NtOdNSBuK3hp71-620g"
+	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjc2MDM0NjcwfQ.EHI55Sey8Qze_TeVC6Dpv3M3LvgiurwAE8x_dgPebjA"
 	header  []byte
 )
 
@@ -106,6 +106,23 @@ func TestSetRoleCreate(t *testing.T) {
 // 删除角色
 func TestSetRoleDelete(t *testing.T) {
 	resp, err := helper.HttpDelete(baseURL+"/set/role/delete?identity=1", []byte{}, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 修改角色
+func TestSetRoleUpdate(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"identity":        "d1d56591-55db-484e-96a6-d94a5a833cd9",
+		"name":            "修改角色测试",
+		"sort":            0,
+		"is_admin":        0,
+		"menu_identities": []string{"1", "2"},
+		"func_identities": []string{"1"},
+	})
+	resp, err := helper.HttpPut(baseURL+"/set/role/update", data, header...)
 	if err != nil {
 		t.Fatal(err)
 	}

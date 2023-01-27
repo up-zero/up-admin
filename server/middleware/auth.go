@@ -31,7 +31,7 @@ func LoginAuthCheck() gin.HandlerFunc {
 
 			// 判断是否是超管
 			isAdmin, err := models.RDB.Get(context.Background(), define.RedisRoleAdminPrefix+userClaim.RoleIdentity).Result()
-			adminRoleKey := "ADMIN-" + userClaim.RoleIdentity
+			adminRoleKey := define.RedisRoleAdminPrefix + userClaim.RoleIdentity
 			if err != nil {
 				roleBasic := new(models.RoleBasic)
 				err = models.DB.Model(new(models.RoleBasic)).Select("is_admin").

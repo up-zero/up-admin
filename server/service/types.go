@@ -76,3 +76,8 @@ type SetRoleCreateRequest struct {
 	MenuIdentities []string `json:"menu_identities"` // 被授权的菜单列表
 	FuncIdentities []string `json:"func_identities"` // 被授权的功能列表
 }
+
+type SetRoleUpdateRequest struct {
+	Identity string `json:"identity"` // 角色唯一标识
+	SetRoleCreateRequest
+}
