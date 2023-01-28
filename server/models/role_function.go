@@ -18,8 +18,8 @@ type authFuncReply struct {
 	Uri string `json:"uri"`
 }
 
-// GetAuthFunc 获取给特定角色授权的功能
-func GetAuthFunc(roleIdentity string) (map[string]interface{}, error) {
+// GetAuthFuncUri 获取给特定角色授权功能的URI
+func GetAuthFuncUri(roleIdentity string) (map[string]interface{}, error) {
 	roleBasic := new(RoleBasic)
 	err := DB.Model(new(RoleBasic)).Select("id").Where("identity = ?", roleIdentity).Find(roleBasic).Error
 	if err != nil {

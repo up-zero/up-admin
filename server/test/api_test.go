@@ -128,3 +128,13 @@ func TestSetRoleUpdate(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 设置-获取菜单列表
+// go test -v -run TestSetMenuList
+func TestSetMenuList(t *testing.T) {
+	resp, err := helper.HttpGet(baseURL+"/set/menu/list", header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}

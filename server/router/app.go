@@ -28,8 +28,11 @@ func App() *gin.Engine {
 	auth := loginAuth.Use(middleware.FuncAuthCheck())
 
 	// 设置
+	// 角色管理
 	// 角色列表
 	auth.GET("/set/role/list", service.SetRoleList)
+	// TODO: 角色详情
+	//auth.GET("/set/role/detail")
 	// 修改角色的管理员身份
 	auth.PUT("/set/role/update/admin", service.SetRoleUpdateAdmin)
 	// 新增角色
@@ -38,7 +41,11 @@ func App() *gin.Engine {
 	auth.DELETE("/set/role/delete", service.SetRoleDelete)
 	// 修改角色
 	auth.PUT("/set/role/update", service.SetRoleUpdate)
-	// TODO：角色管理、菜单功能管理
+
+	// 菜单功能管理
+	// 菜单列表
+	auth.GET("/set/menu/list", service.SetMenuList)
+	// TODO: 功能列表
 	auth.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 200,

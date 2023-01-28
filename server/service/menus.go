@@ -65,6 +65,11 @@ func Menus(c *gin.Context) {
 	})
 }
 
+// SetMenuList 设置-获取菜单列表
+func SetMenuList(c *gin.Context) {
+	Menus(c)
+}
+
 func roleMenuToMenuReply(roleMenus []*RoleMenu) []*MenuReply {
 	parentId := make(map[int]int)
 	reply := make([]*MenuReply, 0)

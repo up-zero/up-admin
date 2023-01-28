@@ -90,7 +90,7 @@ func FuncAuthCheck() gin.HandlerFunc {
 				}
 			} else {
 				// key不存在，从DB中查询数据，并保存
-				data, err := models.GetAuthFunc(userClaim.RoleIdentity)
+				data, err := models.GetAuthFuncUri(userClaim.RoleIdentity)
 				if err != nil {
 					helper.Error("[DB ERROR] : %v", err)
 					c.Abort()
