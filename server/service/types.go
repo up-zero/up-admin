@@ -81,3 +81,11 @@ type SetRoleUpdateRequest struct {
 	Identity string `json:"identity"` // 角色唯一标识
 	SetRoleCreateRequest
 }
+
+type SetFuncListReply struct {
+	Identity     string `json:"identity"`
+	MenuIdentity string `json:"menu_identity"`
+	Name         string `json:"name"`
+	Uri          string `json:"uri"`
+	Sort         int    `json:"sort"`
+}

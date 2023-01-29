@@ -138,3 +138,12 @@ func TestSetMenuList(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 功能列表
+func TestSetFuncList(t *testing.T) {
+	resp, err := helper.HttpGet(baseURL+"/set/func/list", header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}

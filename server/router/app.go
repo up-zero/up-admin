@@ -45,7 +45,8 @@ func App() *gin.Engine {
 	// 菜单功能管理
 	// 菜单列表
 	auth.GET("/set/menu/list", service.SetMenuList)
-	// TODO: 功能列表
+	// 功能列表
+	auth.GET("/set/func/list", service.SetFuncList)
 	auth.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 200,
