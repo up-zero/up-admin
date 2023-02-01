@@ -29,3 +29,18 @@ func GetRoleMenus(roleIdentity string, isAdmin bool) (*gorm.DB, error) {
 	}
 	return tx, nil
 }
+
+// GetRoleMenuIdentity 获取指定角色的菜单唯一标识
+func GetRoleMenuIdentity(roleId uint, isAdmin bool) ([]string, error) {
+	tx := new(gorm.DB)
+	data := make([]string, 0)
+	if isAdmin {
+		tx = DB.Model(new(MenuBasic)).Select("identity").Order("sort ASC")
+	} else {
+		tx = DB.Model(new(RoleMenu)).Select("mb.identity").
+			Joins("LEFT JOIN menu_basic mb ON mb.id = role_menu.menu_id").
+			Where("role_menu.role_id = ?", roleId).Order("mb.sort ASC")
+	}
+	err := tx.Scan(&data).Error
+	return data, err
+}

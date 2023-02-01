@@ -89,3 +89,7 @@ type SetFuncListReply struct {
 	Uri          string `json:"uri"`
 	Sort         int    `json:"sort"`
 }
+
+type SetRoleDetailReply struct {
+	SetRoleCreateRequest
+}

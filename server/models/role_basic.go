@@ -23,3 +23,10 @@ func GetRoleList(keyword string) *gorm.DB {
 	tx.Order("sort ASC")
 	return tx
 }
+
+// GetRoleBasic 获取角色详情
+func GetRoleBasic(identity string) (*RoleBasic, error) {
+	rb := new(RoleBasic)
+	err := DB.Model(new(RoleBasic)).Where("identity = ?", identity).First(rb).Error
+	return rb, err
+}

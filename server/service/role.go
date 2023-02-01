@@ -399,6 +399,63 @@ func SetRoleUpdate(c *gin.Context) {
 	})
 }
 
+// SetRoleDetail 角色详情
+func SetRoleDetail(c *gin.Context) {
+	identity := c.Query("identity")
+	if identity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "必填参不能为空",
+		})
+		return
+	}
+	data := new(SetRoleDetailReply)
+
+	// 1. 获取角色基本信息
+	rb, err := models.GetRoleBasic(identity)
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	data.Name = rb.Name
+	data.IsAdmin = rb.IsAdmin
+	data.Sort = rb.Sort
+
+	// 2. 获取授权的菜单
+	menuIdentities, err := models.GetRoleMenuIdentity(rb.ID, rb.IsAdmin == 1)
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	data.MenuIdentities = menuIdentities
+
+	// 3. 获取授权的功能
+	funcIdentities, err := models.GetRoleFunctionIdentity(rb.ID, rb.IsAdmin == 1)
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	data.FuncIdentities = funcIdentities
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "获取成功",
+		"data": data,
+	})
+}
+
 // redisRoleDelete 删除角色相关的缓存数据
 func redisRoleDelete(roleIdentity string) error {
 	err := models.RDB.Del(context.Background(), define.RedisRoleAdminPrefix+roleIdentity).Err()

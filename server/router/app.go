@@ -31,8 +31,8 @@ func App() *gin.Engine {
 	// 角色管理
 	// 角色列表
 	auth.GET("/set/role/list", service.SetRoleList)
-	// TODO: 角色详情
-	//auth.GET("/set/role/detail")
+	// 角色详情
+	auth.GET("/set/role/detail", service.SetRoleDetail)
 	// 修改角色的管理员身份
 	auth.PUT("/set/role/update/admin", service.SetRoleUpdateAdmin)
 	// 新增角色

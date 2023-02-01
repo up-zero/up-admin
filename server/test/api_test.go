@@ -67,7 +67,16 @@ func TestUserPasswordChange(t *testing.T) {
 
 // 角色列表
 func TestSetRoleList(t *testing.T) {
-	resp, err := helper.HttpGet(baseURL+"/set/role/list/?page=1", header...)
+	resp, err := helper.HttpGet(baseURL+"/set/role/list?page=1", header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 角色详情
+func TestSetRoleDetail(t *testing.T) {
+	resp, err := helper.HttpGet(baseURL+"/set/role/detail?identity=1", header...)
 	if err != nil {
 		t.Fatal(err)
 	}

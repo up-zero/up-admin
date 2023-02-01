@@ -38,3 +38,18 @@ func GetAuthFuncUri(roleIdentity string) (map[string]interface{}, error) {
 	}
 	return data, nil
 }
+
+// GetRoleFunctionIdentity 获取指定角色的功能唯一标识
+func GetRoleFunctionIdentity(roleId uint, isAdmin bool) ([]string, error) {
+	tx := new(gorm.DB)
+	data := make([]string, 0)
+	if isAdmin {
+		tx = DB.Model(new(FunctionBasic)).Select("identity").Order("sort ASC")
+	} else {
+		tx = DB.Model(new(RoleFunction)).Select("fb.identity").
+			Joins("LEFT JOIN function_basic fb ON fb.id = role_function.function_id").
+			Where("role_function.role_id = ?", roleId).Order("fb.sort ASC")
+	}
+	err := tx.Scan(&data).Error
+	return data, err
+}
