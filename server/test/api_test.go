@@ -156,3 +156,41 @@ func TestSetFuncList(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 新增菜单
+func TestDevMenuAdd(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"parent_identity": "2",
+		"name":            "新增菜单测试",
+		"sort":            0,
+	})
+	resp, err := helper.HttpPost(baseURL+"/dev/menu/add", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 修改菜单
+func TestDevMenuUpdate(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"identity":        "11435198-e662-40e7-987e-ab350dd4966e",
+		"parent_identity": "1",
+		"name":            "修改菜单测试",
+		"sort":            0,
+	})
+	resp, err := helper.HttpPut(baseURL+"/dev/menu/update", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 删除菜单
+func TestDevMenuDelete(t *testing.T) {
+	resp, err := helper.HttpDelete(baseURL+"/dev/menu/delete?identity=11435198-e662-40e7-987e-ab350dd4966e", []byte{}, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}

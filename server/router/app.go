@@ -27,7 +27,7 @@ func App() *gin.Engine {
 	// 会鉴权的接口
 	auth := loginAuth.Use(middleware.FuncAuthCheck())
 
-	// 设置
+	// ---------------- BEGIN - 设置 ----------------
 	// 角色管理
 	// 角色列表
 	auth.GET("/set/role/list", service.SetRoleList)
@@ -53,6 +53,17 @@ func App() *gin.Engine {
 			"msg":  "Success",
 		})
 	})
+	// ---------------- END - 设置 ----------------
+
+	// ---------------- BEGIN - dev ----------------
+	// 新增菜单
+	auth.POST("/dev/menu/add", service.DevMenuAdd)
+	// 修改菜单
+	auth.PUT("/dev/menu/update", service.DevMenuUpdate)
+	// 删除菜单
+	auth.DELETE("/dev/menu/delete", service.DevMenuDelete)
+	// TODO: 新增、修改、删除功能
+	// ---------------- END - dev ----------------
 
 	return r
 }
