@@ -62,7 +62,12 @@ func App() *gin.Engine {
 	auth.PUT("/dev/menu/update", service.DevMenuUpdate)
 	// 删除菜单
 	auth.DELETE("/dev/menu/delete", service.DevMenuDelete)
-	// TODO: 新增、修改、删除功能
+	// 新增功能
+	auth.POST("/dev/func/add", service.DevFuncAdd)
+	// 修改功能
+	auth.PUT("/dev/func/update", service.DevFuncUpdate)
+	// 删除功能
+	auth.DELETE("/dev/func/delete", service.DevFuncDelete)
 	// ---------------- END - dev ----------------
 
 	return r

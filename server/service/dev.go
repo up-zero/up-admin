@@ -134,3 +134,135 @@ func DevMenuDelete(c *gin.Context) {
 		"msg":  "删除成功",
 	})
 }
+
+// DevFuncAdd 新增功能
+func DevFuncAdd(c *gin.Context) {
+	in := new(DevFuncAddRequest)
+	err := c.ShouldBindJSON(in)
+	if err != nil {
+		helper.Error("[BindJSON ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数异常",
+		})
+		return
+	}
+	if in.MenuIdentity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "必填参不能为空",
+		})
+		return
+	}
+	// 1. 获取菜单ID
+	var menuId uint
+	err = models.DB.Model(new(models.MenuBasic)).Select("id").
+		Where("identity = ?", in.MenuIdentity).Scan(&menuId).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	// 2. 保存数据
+	err = models.DB.Create(&models.FunctionBasic{
+		Identity: helper.UUID(),
+		MenuId:   menuId,
+		Name:     in.Name,
+		Uri:      in.Uri,
+		Sort:     in.Sort,
+	}).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "新增成功",
+	})
+}
+
+// DevFuncUpdate 修改功能
+func DevFuncUpdate(c *gin.Context) {
+	in := new(DevFuncUpdateRequest)
+	err := c.ShouldBindJSON(in)
+	if err != nil {
+		helper.Error("[BindJSON ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数异常",
+		})
+		return
+	}
+	if in.Identity == "" || in.MenuIdentity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "必填参不能为空",
+		})
+		return
+	}
+	// 1. 获取菜单ID
+	var menuId uint
+	err = models.DB.Model(new(models.MenuBasic)).Select("id").
+		Where("identity = ?", in.MenuIdentity).Scan(&menuId).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	// 2. 更新数据
+	err = models.DB.Model(new(models.FunctionBasic)).Where("identity = ?", in.Identity).Updates(map[string]interface{}{
+		"menu_id": menuId,
+		"name":    in.Name,
+		"uri":     in.Uri,
+		"sort":    in.Sort,
+	}).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "修改成功",
+	})
+}
+
+// DevFuncDelete 删除功能
+func DevFuncDelete(c *gin.Context) {
+	identity := c.Query("identity")
+	if identity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "必填参不能为空",
+		})
+		return
+	}
+	err := models.DB.Where("identity = ?", identity).Delete(new(models.FunctionBasic)).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "删除成功",
+	})
+}

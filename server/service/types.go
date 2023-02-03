@@ -104,3 +104,15 @@ type DevMenuUpdateRequest struct {
 	Identity string `json:"identity"` // 菜单唯一标识，必填
 	DevMenuAddRequest
 }
+
+type DevFuncAddRequest struct {
+	MenuIdentity string `json:"menu_identity"` // 菜单唯一标识
+	Name         string `json:"name"`          // 功能名称
+	Uri          string `json:"uri"`           // 请求地址
+	Sort         int    `json:"sort"`          // 排序
+}
+
+type DevFuncUpdateRequest struct {
+	Identity string `json:"identity"` // 功能唯一标识，必填
+	DevFuncAddRequest
+}

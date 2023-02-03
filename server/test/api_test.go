@@ -194,3 +194,43 @@ func TestDevMenuDelete(t *testing.T) {
 	}
 	fmt.Printf("%s\n", resp)
 }
+
+// 新增功能
+func TestDevFuncAdd(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"menu_identity": "2",
+		"name":          "新增功能测试",
+		"uri":           "/test",
+		"sort":          0,
+	})
+	resp, err := helper.HttpPost(baseURL+"/dev/func/add", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 修改功能
+func TestDevFuncUpdate(t *testing.T) {
+	data, _ := json.Marshal(map[string]interface{}{
+		"identity":      "1cde2a40-0b82-42e7-bc30-acf469f47c86",
+		"menu_identity": "1",
+		"name":          "修改功能测试",
+		"uri":           "/test2",
+		"sort":          10,
+	})
+	resp, err := helper.HttpPut(baseURL+"/dev/func/update", data, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
+
+// 删除功能
+func TestDevFuncDelete(t *testing.T) {
+	resp, err := helper.HttpDelete(baseURL+"/dev/func/delete?identity=1cde2a40-0b82-42e7-bc30-acf469f47c86", []byte{}, header...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%s\n", resp)
+}
