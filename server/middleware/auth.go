@@ -17,7 +17,7 @@ func LoginAuthCheck() gin.HandlerFunc {
 		if err != nil {
 			c.Abort()
 			c.JSON(http.StatusOK, gin.H{
-				"code": -1,
+				"code": 60403,
 				"msg":  "登录过期，请重新登录",
 			})
 		} else {

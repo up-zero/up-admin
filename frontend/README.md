@@ -1,29 +1,15 @@
 # up-admin-vue
 
-## Customize configuration
+## 参考命令
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
++ 安装依赖
 
-## Project Setup
-
-```sh
+```shell
 npm install
 ```
 
-### Compile and Hot-Reload for Development
++ 测试环境运行
 
-```sh
+```shell
 npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```

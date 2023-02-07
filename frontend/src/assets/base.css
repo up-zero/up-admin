@@ -2,3 +2,12 @@
   margin: 0;
   padding: 0;
 }
+
+.default-btn {
+  background: linear-gradient(135deg,#0ad18e,#03a4a5);
+}
+
+.default-btn:hover {
+  background: linear-gradient(135deg,#53deb0,#4ebfc0);
+  color: #fff;
+}

@@ -32,6 +32,14 @@ service.interceptors.response.use(
                 type: 'error',
                 duration: 5 * 1000
             })
+            // token 无效处理
+            if (res.code === 60403) {
+                setTimeout(() => {
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("refresh_token")
+                    window.location.href = "/login"
+                }, 1500)
+            }
             return Promise.reject(new Error(res.msg || 'Error'))
         } else {
             return res

@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
-</script>
-
 <template>
   <WelcomeItem>
     <template #icon>
@@ -84,3 +75,20 @@ import SupportIcon from './icons/IconSupport.vue'
     <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
   </WelcomeItem>
 </template>
+
+<script setup lang="ts">
+import WelcomeItem from './WelcomeItem.vue'
+import DocumentationIcon from './icons/IconDocumentation.vue'
+import ToolingIcon from './icons/IconTooling.vue'
+import EcosystemIcon from './icons/IconEcosystem.vue'
+import CommunityIcon from './icons/IconCommunity.vue'
+import SupportIcon from './icons/IconSupport.vue'
+
+import { getMenus } from '@/api/menu'
+
+// test
+getMenus().then((res: any) => {
+  console.log(res)
+})
+
+</script>
