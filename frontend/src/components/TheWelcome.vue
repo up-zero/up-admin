@@ -84,11 +84,6 @@ import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
 
-import { getMenus } from '@/api/menu'
 
-// test
-getMenus().then((res: any) => {
-  console.log(res)
-})
 
 </script>

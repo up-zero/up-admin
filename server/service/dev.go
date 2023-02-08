@@ -8,6 +8,7 @@ import (
 )
 
 // DevMenuAdd 新增菜单
+// TODO: 关联删除 admin 的菜单缓存数据
 func DevMenuAdd(c *gin.Context) {
 	in := new(DevMenuAddRequest)
 	err := c.ShouldBindJSON(in)
@@ -38,6 +39,7 @@ func DevMenuAdd(c *gin.Context) {
 		Identity: helper.UUID(),
 		ParentId: parentId,
 		Name:     in.Name,
+		WebIcon:  in.WebIcon,
 		Sort:     in.Sort,
 	}).Error
 	if err != nil {
@@ -92,6 +94,7 @@ func DevMenuUpdate(c *gin.Context) {
 	err = models.DB.Model(new(models.MenuBasic)).Where("identity = ?", in.Identity).Updates(map[string]interface{}{
 		"parent_id": parentId,
 		"name":      in.Name,
+		"web_icon":  in.WebIcon,
 		"sort":      in.Sort,
 	}).Error
 	if err != nil {

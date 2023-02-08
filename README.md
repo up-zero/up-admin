@@ -2,13 +2,23 @@
 
 > 基于 Vue3、Gin 的后台管理系统
 
-前后端之间是无侵入式的，可单独使用前端（frontend）、后端（server），也可以将两者结合起来使用
-
 ## 安装
 
-clone项目后，选择自己需要的模块进行安装使用
+1. clone项目
 
 ```shell
 git clone https://gitee.com/up-zero/up-admin.git
+```
+
+2. 进入 `server` 目录中启动后台程序（更多说明请参考`server`中的`README.md`）
+
+```shell
+go run main.go
+```
+
+3. 进入 `frontend` 目录中启动前台程序（更多说明请参考`frontend`中的`README.md`）
+
+```shell
+npm run dev
 ```
 

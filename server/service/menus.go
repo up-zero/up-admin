@@ -79,6 +79,7 @@ func roleMenuToMenuReply(roleMenus []*RoleMenu) []*MenuReply {
 			reply = append(reply, &MenuReply{
 				Identity: v.Identity,
 				Name:     v.Name,
+				WebIcon:  v.WebIcon,
 				Sort:     v.Sort,
 			})
 			parentId[v.Id] = len(reply) - 1
@@ -90,8 +91,9 @@ func roleMenuToMenuReply(roleMenus []*RoleMenu) []*MenuReply {
 			reply[i].SubMenus = append(reply[i].SubMenus, struct {
 				Identity string `json:"identity"`
 				Name     string `json:"name"`
+				WebIcon  string `json:"web_icon"`
 				Sort     int    `json:"sort"`
-			}{Identity: v.Identity, Name: v.Name, Sort: v.Sort})
+			}{Identity: v.Identity, Name: v.Name, WebIcon: v.WebIcon, Sort: v.Sort})
 		}
 	}
 	return reply

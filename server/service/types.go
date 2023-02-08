@@ -25,16 +25,19 @@ type RoleMenu struct {
 	ParentId int    `json:"parent_id"`
 	Identity string `json:"identity"`
 	Name     string `json:"name"`
+	WebIcon  string `json:"web_icon"`
 	Sort     int    `json:"sort"`
 }
 
 type MenuReply struct {
 	Identity string `json:"identity"`
 	Name     string `json:"name"`
+	WebIcon  string `json:"web_icon"`
 	Sort     int    `json:"sort"`
 	SubMenus []struct {
 		Identity string `json:"identity"`
 		Name     string `json:"name"`
+		WebIcon  string `json:"web_icon"`
 		Sort     int    `json:"sort"`
 	} `json:"sub_menus"`
 }
@@ -97,6 +100,7 @@ type SetRoleDetailReply struct {
 type DevMenuAddRequest struct {
 	ParentIdentity string `json:"parent_identity"` // 父级唯一标识，不填默认为顶级菜单
 	Name           string `json:"name"`            // 菜单名称
+	WebIcon        string `json:"web_icon"`        // 网页图标
 	Sort           int    `json:"sort"`            // 排序
 }
 
