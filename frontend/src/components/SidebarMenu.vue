@@ -2,6 +2,8 @@
   <el-menu
       default-active="2"
       @select="handleSelect"
+      :collapse="collapseState"
+      class="my-menu"
   >
     <template v-for="menu in menus">
       <!-- 无 子菜单 -->
@@ -32,7 +34,10 @@
 
 <script lang="ts" setup>
 import { getMenus } from '@/api/menu'
-import {ref} from "vue";
+import {ref, watch} from "vue";
+
+let props = defineProps(['collapseState'])
+
 
 const handleSelect = (key: string) => {
   console.log(key)
@@ -55,4 +60,7 @@ initMenu()
 </script>
 
 <style scoped>
+.my-menu {
+  height: 100vh;
+}
 </style>
