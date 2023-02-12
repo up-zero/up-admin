@@ -17,7 +17,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <Logout />
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -26,6 +26,7 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
+import Logout from "@/views/login/Logout.vue";
 
 let myMenu = ref();
 let collapse = ref(false) // 是否折叠
@@ -55,5 +56,8 @@ const changeCollapseState = () => {
 .my-dropdown-link {
   line-height: 57.6px;
   margin-right: 20px;
+}
+.my-dropdown-link:hover {
+  cursor: pointer;
 }
 </style>

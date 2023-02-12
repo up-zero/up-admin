@@ -5,6 +5,8 @@
 
 .default-btn {
   background: linear-gradient(135deg,#0ad18e,#03a4a5);
+  border: none;
+  color: #fff;
 }
 
 .default-btn:hover {

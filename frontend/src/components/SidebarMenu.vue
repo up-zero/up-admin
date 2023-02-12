@@ -8,7 +8,7 @@
     <template v-for="menu in menus">
       <!-- 无 子菜单 -->
       <el-menu-item v-if="menu.sub_menus == null" :index="menu.identity">
-        <template v-if="menu.web_icon != null">
+        <template v-if="menu.web_icon">
           <el-icon><component :is="menu.web_icon"/></el-icon>
         </template>
         <span>{{ menu.name }}</span>
@@ -16,13 +16,13 @@
       <!-- 有 子菜单 -->
       <el-sub-menu v-else :index="menu.identity">
         <template #title>
-          <template v-if="menu.web_icon != null">
+          <template v-if="menu.web_icon">
             <el-icon><component :is="menu.web_icon"/></el-icon>
           </template>
           <span>{{ menu.name }}</span>
         </template>
         <el-menu-item v-for="subMenu in menu.sub_menus" :index="subMenu.identity">
-          <template v-if="subMenu.web_icon != null">
+          <template v-if="subMenu.web_icon">
             <el-icon><component :is="subMenu.web_icon"/></el-icon>
           </template>
           <span>{{ subMenu.name }}</span>

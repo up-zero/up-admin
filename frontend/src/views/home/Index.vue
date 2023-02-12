@@ -1,7 +1,7 @@
 <template>
   <main>
     <el-container>
-      <el-aside class="my-aside">
+      <el-aside class="my-aside" v-bind:class="{'my-aside-width':!collapseState}">
         <SidebarMenu :collapseState="collapseState"/>
       </el-aside>
       <el-container>
@@ -33,5 +33,8 @@ function emitCollapseState(collapse:boolean) {
 }
 .my-aside {
   width: auto;
+}
+.my-aside-width {
+  width: 200px;
 }
 </style>
