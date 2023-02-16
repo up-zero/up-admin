@@ -36,14 +36,34 @@
 import { getMenus } from '@/api/menu'
 import {ref, watch} from "vue";
 
+let menus = ref()
 let props = defineProps(['collapseState'])
+let emits = defineEmits(['emit-select-menu'])
 
-
-const handleSelect = (key: string) => {
-  console.log(key)
+const handleSelect = (_: string, indexPath: string) => {
+  let menu = menus.value
+  let index = 0
+  let arr = [];
+  for (let i = 0; i < menu.length; i++) {
+    if (menu[i].identity == indexPath[index]) {
+      arr.push(menu[i].name)
+      index ++
+      if (index == indexPath.length) {
+        break
+      }
+      let subMenu = JSON.parse(JSON.stringify(menu[i].sub_menus))
+      for (let j = 0; j < subMenu.length; j ++) {
+        if (subMenu[j].identity == indexPath[index]) {
+          arr.push(subMenu[j].name)
+          break
+        }
+      }
+      break
+    }
+  }
+  console.log(arr)
+  emits('emit-select-menu', arr)
 }
-
-let menus = ref({})
 
 // initMenu 初始化菜单
 function initMenu() {
@@ -51,8 +71,11 @@ function initMenu() {
   if (menu == null) {
     getMenus().then((res: any) => {
       menus.value = res.data
+      localStorage.setItem("menu", JSON.stringify(res.data))
       console.log(res.data)
     })
+  } else {
+    menus.value = JSON.parse(menu)
   }
 }
 

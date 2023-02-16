@@ -10,10 +10,12 @@
       <Fold v-if="!collapse" />
       <Expand v-else/>
     </el-icon>
+    <span v-for="menuName in selectMenuArr" class="my-menu-name">/&nbsp;{{menuName}}</span>
+
     <div class="flex-grow" />
     <el-dropdown :hide-on-click="false">
       <span class="my-dropdown-link">
-        姓名<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        {{ username }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
       </span>
       <template #dropdown>
         <el-dropdown-menu>
@@ -30,7 +32,9 @@ import Logout from "@/views/login/Logout.vue";
 
 let myMenu = ref();
 let collapse = ref(false) // 是否折叠
+let props = defineProps(['selectMenuArr'])
 let emits = defineEmits(['emit-collapse-state'])
+let username = localStorage.getItem("username")
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -59,5 +63,11 @@ const changeCollapseState = () => {
 }
 .my-dropdown-link:hover {
   cursor: pointer;
+}
+.my-menu-name {
+  color: #97a8be;
+  font-size: 14px;
+  padding-right: 10px;
+  line-height: 55px;
 }
 </style>

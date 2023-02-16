@@ -2,11 +2,11 @@
   <main>
     <el-container>
       <el-aside class="my-aside" v-bind:class="{'my-aside-width':!collapseState}">
-        <SidebarMenu :collapseState="collapseState"/>
+        <SidebarMenu :collapseState="collapseState" @emit-select-menu="emitSelectMenu"/>
       </el-aside>
       <el-container>
         <el-header class="my-header">
-          <TopNav @emit-collapse-state="emitCollapseState"/>
+          <TopNav @emit-collapse-state="emitCollapseState" :selectMenuArr="selectMenuArr"/>
         </el-header>
         <el-main>main</el-main>
       </el-container>
@@ -20,11 +20,15 @@ import TopNav from "@/components/TopNav.vue";
 import {ref} from "vue";
 
 let collapseState = ref(false)
+let selectMenuArr = ref()
 
 function emitCollapseState(collapse:boolean) {
   collapseState.value = collapse
 }
 
+function emitSelectMenu(arr:any) {
+  selectMenuArr.value = arr
+}
 </script>
 
 <style scoped>

@@ -55,7 +55,10 @@ const userFormRules = reactive({
     },
   ]
 })
-let userForm = ref({})
+let userForm = ref({
+  username: "",
+  password: ""
+})
 
 function judgeLoginState() {
   let token = localStorage.getItem("token")
@@ -77,6 +80,7 @@ const login = (formEl: FormInstance | undefined) => {
         })
         localStorage.setItem("token", res.data.token)
         localStorage.setItem("refresh_token", res.data.refresh_token)
+        localStorage.setItem("username", userForm.value.username)
         setTimeout(() => {
           router.push({ name: 'home' })
         }, 1500)

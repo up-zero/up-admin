@@ -14,6 +14,7 @@ const logOut = () => {
     // 清除用户信息
     localStorage.removeItem("refresh_token")
     localStorage.removeItem("token")
+    localStorage.removeItem("username")
     localStorage.removeItem("menu")
     // 跳转到登录页
     window.location.href = "/login"
