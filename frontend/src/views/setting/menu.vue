@@ -1,12 +1,10 @@
 <template>
 <main>
-  主页
-  <router-link to="/setting/role">wwww</router-link>
+  菜单管理
 </main>
 </template>
 
 <script lang="ts" setup>
-
 </script>
 
 <style scoped>

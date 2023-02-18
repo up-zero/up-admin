@@ -8,6 +8,7 @@ type MenuBasic struct {
 	ParentId uint   `gorm:"column:parent_id;type:int(11);" json:"parent_id"`
 	Name     string `gorm:"column:name;type:varchar(100)" json:"name"`
 	WebIcon  string `gorm:"column:web_icon;type:varchar(100);" json:"web_icon"` // 网页端的图标
+	Path     string `gorm:"column:path;type:varchar(255);" json:"path"`         // 菜单路径
 	Sort     int    `gorm:"column:sort;type:int(11);default:0;" json:"sort"`    // 排序规则，默认升序，值越少越靠前
 }
 

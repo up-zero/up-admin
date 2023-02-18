@@ -1,7 +1,6 @@
 <template>
 <main>
-  主页
-  <router-link to="/setting/role">wwww</router-link>
+  角色管理
 </main>
 </template>
 
