@@ -1,12 +1,14 @@
 import {defineStore} from 'pinia'
+// @ts-ignore
 import {getMenus} from '@/api/menu'
 
-export const useCounterStore = defineStore('counter', {
+export const useStore = defineStore('counter', {
     state: () => {
         return {
             register: false,
             menus: [],
-            userRouters: []
+            userRouters: [],
+            tags: []
         }
     },
     getters: {},

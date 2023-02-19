@@ -1,29 +1,29 @@
 <template>
   <el-menu
-      default-active="2"
+      :default-active="router.currentRoute.value.path"
       :collapse="collapseState"
       class="my-menu"
       :router="true"
   >
-    <template v-for="menu in store.menus">
+    <template v-for="menu in store.userRouters">
       <!-- 无 子菜单 -->
-      <el-menu-item v-if="menu.sub_menus == null" :index="menu.path">
-        <template v-if="menu.web_icon">
-          <el-icon><component :is="menu.web_icon"/></el-icon>
+      <el-menu-item v-if="menu.children == null" :index="menu.path">
+        <template v-if="menu.meta">
+          <el-icon><component :is="menu.meta.icon"/></el-icon>
         </template>
         <span>{{ menu.name }}</span>
       </el-menu-item>
       <!-- 有 子菜单 -->
       <el-sub-menu v-else :index="menu.path">
         <template #title>
-          <template v-if="menu.web_icon">
-            <el-icon><component :is="menu.web_icon"/></el-icon>
+          <template v-if="menu.meta&&menu.meta.icon">
+            <el-icon><component :is="menu.meta.icon"/></el-icon>
           </template>
           <span>{{ menu.name }}</span>
         </template>
-        <el-menu-item v-for="subMenu in menu.sub_menus" :index="subMenu.path">
-          <template v-if="subMenu.web_icon">
-            <el-icon><component :is="subMenu.web_icon"/></el-icon>
+        <el-menu-item v-for="subMenu in menu.children" :index="subMenu.path">
+          <template v-if="subMenu.meta&&subMenu.meta.icon">
+            <el-icon><component :is="subMenu.meta.icon"/></el-icon>
           </template>
           <span>{{ subMenu.name }}</span>
         </el-menu-item>
@@ -36,9 +36,9 @@
 import { getMenus } from '@/api/menu'
 import {ref, toRefs, watch} from "vue";
 
-import { useCounterStore } from '@/stores'
+import { useStore } from '@/stores'
 import router from "@/router";
-const store = useCounterStore()
+const store = useStore()
 let props = defineProps(['collapseState'])
 let emits = defineEmits(['emit-select-menu'])
 

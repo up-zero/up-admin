@@ -5,7 +5,7 @@
         <SidebarMenu :collapseState="collapseState" @emit-select-menu="emitSelectMenu"/>
       </el-aside>
       <el-container>
-        <el-header class="my-header">
+        <el-header class="my-header" style="height: auto">
           <TopNav @emit-collapse-state="emitCollapseState" :selectMenuArr="selectMenuArr"/>
         </el-header>
         <el-main>

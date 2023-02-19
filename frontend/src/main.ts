@@ -1,6 +1,6 @@
 import {createApp} from 'vue'
 import {createPinia} from 'pinia'
-import {useCounterStore} from '@/stores'
+import {useStore} from '@/stores'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -9,6 +9,7 @@ import App from './App.vue'
 import router from './router'
 
 import './assets/main.css'
+// import * as module from "module";
 
 const app = createApp(App)
 
@@ -19,10 +20,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
-let store = useCounterStore()
+let store = useStore()
 app.mount('#app')
 
-// const modules = import.meta.glob('./views/**/*.vue');
+const modules = import.meta.glob('./views/**/*.vue');
 
 // 注册路由
 router.beforeEach(async (to, form, next) => {
@@ -35,30 +36,54 @@ router.beforeEach(async (to, form, next) => {
         } else {
             store.menus = JSON.parse(menus)
         }
-        // 处理 menu
+        // @ts-ignore
+        let routes=[];
         store.menus.forEach((item: any) => {
+            let myRoute:any={};
             if (item.path) {
-                router.addRoute('home', {
+                myRoute={
                     path: item.path,
                     name: item.name,
-                    component: ()=>import('./views/' + item.path + '.vue')
-                })
+                    meta:{
+                        icon:item.web_icon
+                    },
+                    component:modules['./views' + item.path + '.vue']
+                }
+            }else{
+                myRoute={
+                    path:'/layout',
+                    name:item.name,
+                    meta:{
+                        icon:item.web_icon
+                    },
+                    component: modules['./components/layout.vue']
+                }
             }
             if (item.sub_menus) {
+                myRoute.children=[]
                 item.sub_menus.forEach((subItem: any) => {
                     if (subItem.path) {
-                        router.addRoute('home', {
+                        myRoute.children.push({
                             path: subItem.path,
                             name: subItem.name,
-                            component: ()=>import('./views/' + subItem.path + '.vue')
-                            // component: modules['./views/' + subItem.path + '.vue']
+                           meta:{
+                               icon:subItem.web_icon
+                           },
+                            // component: ()=>import('./views' + subItem.path + '.vue')
+                            component:modules['./views' + subItem.path + '.vue']
                         })
                     }
                 });
             }
+            routes.push(myRoute)
         })
-        store.userRouters = router.getRoutes()
-console.log(store.userRouters)
+        // @ts-ignore
+        routes.forEach(item=>{
+            router.addRoute('home',item)
+        })
+        // @ts-ignore
+        store.userRouters = routes
+
         store.register = true
         next(to.fullPath)
     } else {
