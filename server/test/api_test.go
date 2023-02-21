@@ -10,7 +10,7 @@ import (
 
 var (
 	baseURL = "http://localhost:9090"
-	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjc2MDM0NjcwfQ.EHI55Sey8Qze_TeVC6Dpv3M3LvgiurwAE8x_dgPebjA"
+	token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6MSwiSWRlbnRpdHkiOiIxIiwiTmFtZSI6ImdldCIsIlJvbGVJZGVudGl0eSI6IjEiLCJJc0FkbWluIjpmYWxzZSwiZXhwIjoxNjc4MTA3NTYzfQ.665FEri_rqN_k3cZFnB5MhbKzktfFRF5GpajWDOJA1Y"
 	header  []byte
 )
 

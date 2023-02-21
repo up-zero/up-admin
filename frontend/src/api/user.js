@@ -8,3 +8,12 @@ export function loginPassword(data) {
         data,
     })
 }
+
+// 修改密码
+export function userPasswordChange(data) {
+    return request({
+        url: "/user/password/change",
+        method: "put",
+        data,
+    })
+}

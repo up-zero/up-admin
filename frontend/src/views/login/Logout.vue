@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown-item @click="logOut">退出登录</el-dropdown-item>
+  <el-dropdown-item @click="logOut" divided>退出登录</el-dropdown-item>
 </template>
 
 <script lang="ts" setup>
