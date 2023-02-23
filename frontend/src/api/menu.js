@@ -7,3 +7,10 @@ export function getMenus() {
         method: "get",
     })
 }
+
+export function getMenusList() {
+    return request({
+        url: "/set/menu/list",
+        method: "get",
+    })
+}

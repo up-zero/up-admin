@@ -4,6 +4,7 @@ import {useStore} from '@/stores'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import locale from 'element-plus/lib/locale/lang/zh-cn'
 
 import App from './App.vue'
 import router from './router'
@@ -19,7 +20,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(createPinia())
 app.use(router)
-app.use(ElementPlus)
+app.use(ElementPlus, {locale})
 let store = useStore()
 app.mount('#app')
 
