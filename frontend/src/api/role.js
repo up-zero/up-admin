@@ -7,3 +7,11 @@ export function getRoleList(params) {
         params: params,
     })
 }
+
+export function setRoleUpdateAdmin(data) {
+    return request({
+        url: "/set/role/update/admin",
+        method: "put",
+        data
+    })
+}
