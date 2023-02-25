@@ -29,8 +29,8 @@ var (
 	RedisPassword = ""
 	// RedisRoleAdminPrefix 判断角色是否是超管的前缀
 	RedisRoleAdminPrefix = "ADMIN-"
-	// RedisMenuPrefix 菜单的前缀
-	RedisMenuPrefix = "MENU-"
+	// RedisMenuPrefix 菜单
+	RedisMenuPrefix = "MENU"
 	// RedisFuncPrefix 功能的前缀
 	RedisFuncPrefix = "FUNC-"
 )

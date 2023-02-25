@@ -15,3 +15,11 @@ export function setRoleUpdateAdmin(data) {
         data
     })
 }
+
+export function setRoleDelete(params) {
+    return request({
+        url: "/set/role/delete",
+        method: "delete",
+        params: params,
+    })
+}

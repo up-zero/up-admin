@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+	"gitee.com/up-zero/up-admin/define"
 	"gitee.com/up-zero/up-admin/helper"
 	"gitee.com/up-zero/up-admin/models"
 	"github.com/gin-gonic/gin"
@@ -8,7 +10,6 @@ import (
 )
 
 // DevMenuAdd 新增菜单
-// TODO: 关联删除 admin 的菜单缓存数据
 func DevMenuAdd(c *gin.Context) {
 	in := new(DevMenuAddRequest)
 	err := c.ShouldBindJSON(in)
@@ -47,6 +48,16 @@ func DevMenuAdd(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
+		})
+		return
+	}
+	// 3. 清空菜单缓存数据
+	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix).Err()
+	if err != nil {
+		helper.Error("[RDB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "缓存异常",
 		})
 		return
 	}
@@ -105,6 +116,16 @@ func DevMenuUpdate(c *gin.Context) {
 		})
 		return
 	}
+	// 3. 清空菜单缓存数据
+	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix).Err()
+	if err != nil {
+		helper.Error("[RDB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "缓存异常",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
@@ -122,12 +143,23 @@ func DevMenuDelete(c *gin.Context) {
 		})
 		return
 	}
+	// 1. 删除数据库中的数据
 	err := models.DB.Where("identity = ?", identity).Delete(new(models.MenuBasic)).Error
 	if err != nil {
 		helper.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
+		})
+		return
+	}
+	// 2. 清空菜单缓存数据
+	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix).Err()
+	if err != nil {
+		helper.Error("[RDB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "缓存异常",
 		})
 		return
 	}

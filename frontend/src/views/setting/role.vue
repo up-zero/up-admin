@@ -18,7 +18,7 @@
         <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+            @click="handleRoleDelete(scope.row)"
         >Delete</el-button
         >
       </template>
@@ -38,9 +38,9 @@
 </template>
 
 <script lang="ts" setup>
-import {getRoleList, setRoleUpdateAdmin} from '@/api/role'
+import {getRoleList, setRoleUpdateAdmin, setRoleDelete} from '@/api/role'
 import {ref} from "vue";
-import {ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 let roles = ref()
 let roleCount = ref()
@@ -72,6 +72,22 @@ const handleChangeAdminState = (row: any) => {
       reject(false)
     })
   })
+}
+
+const handleRoleDelete = (row: any) => {
+  ElMessageBox.confirm("确认删除当前角色么？", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    autofocus: false,
+  }).then(() => {
+    setRoleDelete({identity: row.identity}).then((res: any) => {
+      ElMessage({
+        message: "删除成功",
+        type: 'success',
+      })
+      roleList()
+    }).catch(() => {})
+  }).catch(() => {})
 }
 </script>
 

@@ -13,7 +13,7 @@
         <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+            @click="handleMenuDelete(scope.row)"
         >Delete</el-button
         >
       </template>
@@ -24,7 +24,8 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
-import {getMenusList} from "@/api/menu"
+import {getMenusList, devMenuDelete} from "@/api/menu"
+import {ElMessage, ElMessageBox} from "element-plus";
 
 let menus = ref()
 
@@ -34,8 +35,20 @@ const menuList = () => {
     console.log(res.data)
   })
 }
-
 menuList()
+
+const handleMenuDelete = (row: any) => {
+  ElMessageBox.confirm("确认删除么？", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    autofocus: false,
+  }).then(() => {
+    devMenuDelete({identity: row.identity}).then((res: any) => {
+      ElMessage.success("删除成功")
+      menuList()
+    }).catch(() => {})
+  }).catch(() => {})
+}
 </script>
 
 <style scoped>

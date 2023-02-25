@@ -462,7 +462,7 @@ func redisRoleDelete(roleIdentity string) error {
 	if err != nil {
 		return err
 	}
-	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix+roleIdentity).Err()
+	err = models.RDB.HDel(context.Background(), define.RedisMenuPrefix, roleIdentity).Err()
 	if err != nil {
 		return err
 	}

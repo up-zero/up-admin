@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"gitee.com/up-zero/up-admin/define"
 	"gitee.com/up-zero/up-admin/helper"
 	"gitee.com/up-zero/up-admin/models"
@@ -14,15 +15,16 @@ import (
 // Menus 获取菜单列表
 func Menus(c *gin.Context) {
 	userClaim := c.MustGet("UserClaim").(*define.UserClaim)
-	menuKey := define.RedisMenuPrefix + userClaim.RoleIdentity
+	menuField := userClaim.RoleIdentity
 	if userClaim.IsAdmin {
-		menuKey = define.RedisMenuPrefix + "ADMIN"
+		menuField = "ADMIN"
 	}
 
 	data := make([]*MenuReply, 0)
 	roleMenus := make([]*RoleMenu, 0)
-	res, err := models.RDB.Get(context.Background(), menuKey).Result()
+	res, err := models.RDB.HGet(context.Background(), define.RedisMenuPrefix, menuField).Result()
 	if err != nil {
+		fmt.Println("RUN", err.Error())
 		tx, err := models.GetRoleMenus(userClaim.RoleIdentity, userClaim.IsAdmin)
 		if err != nil {
 			helper.Error("[DB ERROR] : %v", err)
@@ -43,8 +45,9 @@ func Menus(c *gin.Context) {
 		}
 		data = roleMenuToMenuReply(roleMenus)
 		b, _ := json.Marshal(data)
-		// 同步 Redis，默认保存两周
-		models.RDB.Set(context.Background(), menuKey, string(b), time.Second*3600*24*14)
+		models.RDB.HSet(context.Background(), define.RedisMenuPrefix, map[string]string{
+			menuField: string(b),
+		})
 	} else {
 		err = json.Unmarshal([]byte(res), &data)
 		if err != nil {
@@ -56,7 +59,7 @@ func Menus(c *gin.Context) {
 			return
 		}
 		// Redis 查到数据后，再续两周
-		models.RDB.Expire(context.Background(), menuKey, time.Second*3600*24*14)
+		models.RDB.Expire(context.Background(), define.RedisMenuPrefix, time.Second*3600*24*14)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,

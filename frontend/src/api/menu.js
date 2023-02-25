@@ -14,3 +14,11 @@ export function getMenusList() {
         method: "get",
     })
 }
+
+export function devMenuDelete(params) {
+    return request({
+        url: "/dev/menu/delete",
+        method: "delete",
+        params: params
+    })
+}
