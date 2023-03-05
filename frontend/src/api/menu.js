@@ -30,3 +30,11 @@ export function devMenuAdd(data) {
         data
     })
 }
+
+export function devMenuUpdate(data) {
+    return request({
+        url: "/dev/menu/update",
+        method: "put",
+        data
+    })
+}

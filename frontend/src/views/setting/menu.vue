@@ -2,7 +2,7 @@
 <main>
   <el-row style="margin-bottom: 15px">
     <el-col :span="2">
-      <el-button size="large" type="primary" style="width: 90%" @click="showMenuDialog('create-top')">新增顶层菜单</el-button>
+      <el-button size="large" type="primary" style="width: 90%" @click="showMenuDialog('create-top', null)">新增顶层菜单</el-button>
     </el-col>
   </el-row>
   <el-table :data="menus" row-key="identity" border :tree-props="{ children: 'sub_menus' }" style="width: 100%">
@@ -12,8 +12,11 @@
     <el-table-column prop="path" label="路径" />
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-        >Edit</el-button
+        <el-button v-if="scope.row.parent_identity === ''" type="primary" size="small" @click="showMenuDialog('create-sub', scope.row)"
+        >新增子菜单</el-button
+        >
+        <el-button size="small" @click="showMenuDialog('edit', scope.row)"
+        >编辑</el-button
         >
         <el-button
             size="small"
@@ -26,7 +29,7 @@
   </el-table>
   <el-dialog
       v-model="menuDialogVisible"
-      :title="menuDialogType === 'update' ? '编辑菜单': '新增菜单'"
+      :title="menuDialogType === 'edit' ? '编辑菜单': '新增菜单'"
       width="30%"
   >
     <el-form
@@ -73,7 +76,7 @@
 
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
-import {getMenusList, devMenuDelete, devMenuAdd} from "@/api/menu"
+import {getMenusList, devMenuDelete, devMenuAdd, devMenuUpdate} from "@/api/menu"
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {FormInstance} from "element-plus";
 
@@ -81,6 +84,7 @@ let menus = ref()
 let menuDialogVisible = ref(false)
 let menuDialogType = ref('')
 let menuManage = ref({
+  identity: '',
   parent_identity: '',
   name: '',
   sort: 0,
@@ -119,7 +123,8 @@ const showMenuDialog = (dialogType: string, row: any) => {
   } else if (dialogType === 'create-sub') {
     menuManage.value.parent_identity = row.identity
   } else {
-    menuManage.value.parent_identity = row.identity
+    menuManage.value.identity = row.identity
+    menuManage.value.parent_identity = row.parent_identity
     menuManage.value.name = row.name
     menuManage.value.sort = row.sort
     menuManage.value.path = row.path
@@ -132,11 +137,19 @@ const confirmSaveMenu = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      devMenuAdd(menuManage.value).then((res: any) => {
-        ElMessage.success("新增成功")
-        menuList()
-        menuDialogVisible.value = false
-      })
+      if (menuDialogType.value === 'edit') {
+        devMenuUpdate(menuManage.value).then((res: any) => {
+          ElMessage.success("编辑成功")
+          menuList()
+          menuDialogVisible.value = false
+        })
+      } else {
+        devMenuAdd(menuManage.value).then((res: any) => {
+          ElMessage.success("新增成功")
+          menuList()
+          menuDialogVisible.value = false
+        })
+      }
     }
   })
 }

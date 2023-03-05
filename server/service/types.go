@@ -31,17 +31,19 @@ type RoleMenu struct {
 }
 
 type MenuReply struct {
-	Identity string `json:"identity"`
-	Name     string `json:"name"`
-	WebIcon  string `json:"web_icon"`
-	Sort     int    `json:"sort"`
-	Path     string `json:"path"`
-	SubMenus []struct {
-		Identity string `json:"identity"`
-		Name     string `json:"name"`
-		WebIcon  string `json:"web_icon"`
-		Sort     int    `json:"sort"`
-		Path     string `json:"path"`
+	Identity       string `json:"identity"`
+	ParentIdentity string `json:"parent_identity"`
+	Name           string `json:"name"`
+	WebIcon        string `json:"web_icon"`
+	Sort           int    `json:"sort"`
+	Path           string `json:"path"`
+	SubMenus       []struct {
+		Identity       string `json:"identity"`
+		ParentIdentity string `json:"parent_identity"`
+		Name           string `json:"name"`
+		WebIcon        string `json:"web_icon"`
+		Sort           int    `json:"sort"`
+		Path           string `json:"path"`
 	} `json:"sub_menus"`
 }
 
