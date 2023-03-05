@@ -23,3 +23,27 @@ export function setRoleDelete(params) {
         params: params,
     })
 }
+
+export function setRoleCreate(data) {
+    return request({
+        url: "/set/role/create",
+        method: "post",
+        data
+    })
+}
+
+export function setRoleDetail(params) {
+    return request({
+        url: "/set/role/detail",
+        method: "get",
+        params: params,
+    })
+}
+
+export function setRoleUpdate(data) {
+    return request({
+        url: "/set/role/update",
+        method: "put",
+        data
+    })
+}

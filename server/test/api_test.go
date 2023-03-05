@@ -76,7 +76,7 @@ func TestSetRoleList(t *testing.T) {
 
 // 角色详情
 func TestSetRoleDetail(t *testing.T) {
-	resp, err := helper.HttpGet(baseURL+"/set/role/detail?identity=1", header...)
+	resp, err := helper.HttpGet(baseURL+"/set/role/detail?identity=d1d56591-55db-484e-96a6-d94a5a833cd9", header...)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +103,6 @@ func TestSetRoleCreate(t *testing.T) {
 		"sort":            0,
 		"is_admin":        0,
 		"menu_identities": []string{"1", "2"},
-		"func_identities": []string{"1"},
 	})
 	resp, err := helper.HttpPost(baseURL+"/set/role/create", data, header...)
 	if err != nil {
@@ -129,7 +128,6 @@ func TestSetRoleUpdate(t *testing.T) {
 		"sort":            0,
 		"is_admin":        0,
 		"menu_identities": []string{"1", "2"},
-		"func_identities": []string{"1"},
 	})
 	resp, err := helper.HttpPut(baseURL+"/set/role/update", data, header...)
 	if err != nil {

@@ -1,7 +1,7 @@
 <template>
 <main>
   主页
-  <router-link to="/setting/role">wwww</router-link>
+  <router-link to="/setting/role">主页</router-link>
 </main>
 </template>
 

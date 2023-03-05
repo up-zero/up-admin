@@ -9,11 +9,18 @@
     <el-table-column prop="name" label="菜单名称"/>
     <el-table-column prop="web_icon" label="WebIcon" />
     <el-table-column prop="sort" label="菜单排序" />
+    <el-table-column prop="level" label="菜单类型">
+      <template #default="scope">
+        <span v-if="scope.row.level === 0">目录</span>
+        <span v-else-if="scope.row.level === 1">菜单</span>
+        <span v-else>按钮</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="path" label="路径" />
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button v-if="scope.row.parent_identity === ''" type="primary" size="small" @click="showMenuDialog('create-sub', scope.row)"
-        >新增子菜单</el-button
+        <el-button v-if="scope.row.level !== 2" type="primary" size="small" @click="showMenuDialog('create-sub', scope.row)"
+        >新增子级</el-button
         >
         <el-button size="small" @click="showMenuDialog('edit', scope.row)"
         >编辑</el-button
@@ -63,6 +70,16 @@
       >
         <el-input placeholder="请输入菜单图标" v-model="menuManage.web_icon"/>
       </el-form-item>
+      <el-form-item
+          prop="level"
+          label="菜单等级"
+      >
+        <el-select v-model="menuManage.level" placeholder="请选择菜单等级" >
+          <el-option label="目录" :value="0" />
+          <el-option label="菜单" :value="1" />
+          <el-option label="按钮" :value="2" />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <span>
@@ -90,6 +107,7 @@ let menuManage = ref({
   sort: 0,
   path: '',
   web_icon: '',
+  level: 0,
 })
 const menuManageRules = reactive({
   name: [
@@ -129,6 +147,7 @@ const showMenuDialog = (dialogType: string, row: any) => {
     menuManage.value.sort = row.sort
     menuManage.value.path = row.path
     menuManage.value.web_icon = row.web_icon
+    menuManage.value.level = row.level
   }
   menuDialogVisible.value = true
 }

@@ -28,23 +28,18 @@ type RoleMenu struct {
 	WebIcon  string `json:"web_icon"`
 	Sort     int    `json:"sort"`
 	Path     string `json:"path"`
+	Level    int    `json:"level"`
 }
 
 type MenuReply struct {
-	Identity       string `json:"identity"`
-	ParentIdentity string `json:"parent_identity"`
-	Name           string `json:"name"`
-	WebIcon        string `json:"web_icon"`
-	Sort           int    `json:"sort"`
-	Path           string `json:"path"`
-	SubMenus       []struct {
-		Identity       string `json:"identity"`
-		ParentIdentity string `json:"parent_identity"`
-		Name           string `json:"name"`
-		WebIcon        string `json:"web_icon"`
-		Sort           int    `json:"sort"`
-		Path           string `json:"path"`
-	} `json:"sub_menus"`
+	Identity       string       `json:"identity"`
+	ParentIdentity string       `json:"parent_identity"`
+	Name           string       `json:"name"`
+	WebIcon        string       `json:"web_icon"`
+	Sort           int          `json:"sort"`
+	Path           string       `json:"path"`
+	Level          int          `json:"level"` // 菜单等级，{0：目录，1：菜单，2：按钮}
+	SubMenus       []*MenuReply `json:"sub_menus"`
 }
 
 type UserInfoReply struct {
@@ -82,7 +77,6 @@ type SetRoleCreateRequest struct {
 	Sort           int64    `json:"sort"`
 	IsAdmin        int8     `json:"is_admin"`
 	MenuIdentities []string `json:"menu_identities"` // 被授权的菜单列表
-	FuncIdentities []string `json:"func_identities"` // 被授权的功能列表
 }
 
 type SetRoleUpdateRequest struct {
@@ -108,6 +102,7 @@ type DevMenuAddRequest struct {
 	WebIcon        string `json:"web_icon"`        // 网页图标
 	Path           string `json:"path"`            // 路径
 	Sort           int    `json:"sort"`            // 排序
+	Level          int    `json:"level"`           // 菜单等级，{0：目录，1：菜单，2：按钮}
 }
 
 type DevMenuUpdateRequest struct {

@@ -74,9 +74,8 @@ func SetMenuList(c *gin.Context) {
 }
 
 func roleMenuToMenuReply(roleMenus []*RoleMenu) []*MenuReply {
-	parentId := make(map[int]int)
 	reply := make([]*MenuReply, 0)
-	// 一层循环，得到父级菜单
+	// 一层循环，得到顶层菜单
 	for _, v := range roleMenus {
 		if v.ParentId == 0 {
 			reply = append(reply, &MenuReply{
@@ -85,22 +84,30 @@ func roleMenuToMenuReply(roleMenus []*RoleMenu) []*MenuReply {
 				WebIcon:  v.WebIcon,
 				Sort:     v.Sort,
 				Path:     v.Path,
+				Level:    v.Level,
+				SubMenus: getChildrenMenu(v.Id, v.Identity, roleMenus),
 			})
-			parentId[v.Id] = len(reply) - 1
-		}
-	}
-	// 再次循环，得到子级菜单
-	for _, v := range roleMenus {
-		if i, ok := parentId[v.ParentId]; ok {
-			reply[i].SubMenus = append(reply[i].SubMenus, struct {
-				Identity       string `json:"identity"`
-				ParentIdentity string `json:"parent_identity"`
-				Name           string `json:"name"`
-				WebIcon        string `json:"web_icon"`
-				Sort           int    `json:"sort"`
-				Path           string `json:"path"`
-			}{Identity: v.Identity, ParentIdentity: reply[i].Identity, Name: v.Name, WebIcon: v.WebIcon, Sort: v.Sort, Path: v.Path})
 		}
 	}
 	return reply
+}
+
+// getChildrenMenu 获取子菜单
+func getChildrenMenu(parentId int, parentIdentity string, roleMenus []*RoleMenu) []*MenuReply {
+	data := make([]*MenuReply, 0)
+	for _, v := range roleMenus {
+		if v.ParentId == parentId {
+			data = append(data, &MenuReply{
+				Identity:       v.Identity,
+				Name:           v.Name,
+				WebIcon:        v.WebIcon,
+				Sort:           v.Sort,
+				Path:           v.Path,
+				Level:          v.Level,
+				ParentIdentity: parentIdentity,
+				SubMenus:       getChildrenMenu(v.Id, v.Identity, roleMenus),
+			})
+		}
+	}
+	return data
 }

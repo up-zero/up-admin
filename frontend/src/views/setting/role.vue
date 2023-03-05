@@ -24,8 +24,8 @@
     <el-table-column prop="updated_at" label="更新时间"/>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-        >Edit</el-button
+        <el-button size="small" @click="showRoleDialog('edit', scope.row)"
+        >编辑</el-button
         >
         <el-button
             size="small"
@@ -76,6 +76,24 @@
       >
         <el-switch v-model="roleManage.is_admin" :active-value="1" :inactive-value="0"/>
       </el-form-item>
+      <el-form-item
+        prop="menu_identities"
+        label="菜单"
+      >
+        <el-tree
+            ref="treeRef"
+            :data="menus"
+            :props="treeProps"
+            multiple
+            :render-after-expand="false"
+            node-key="identity"
+            show-checkbox
+            :default-checked-keys="roleManage.menu_identities"
+            check-strictly
+            check-on-click-node
+            style="display: block; width: 100%"
+        />
+      </el-form-item>
     </el-form>
     <template #footer>
       <span>
@@ -88,13 +106,16 @@
 </template>
 
 <script lang="ts" setup>
-import {getRoleList, setRoleUpdateAdmin, setRoleDelete} from '@/api/role'
+import {getRoleList, setRoleUpdateAdmin, setRoleDelete, setRoleCreate, setRoleDetail, setRoleUpdate} from '@/api/role'
+import {getMenusList} from '@/api/menu'
 import {reactive, ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import type { FormInstance} from "element-plus";
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
+import type { ElTree } from 'element-plus'
 
 let roles = ref()
+let menus = ref()
 let roleCount = ref()
 let keyword = ref()
 let currentPage = ref(1)
@@ -103,12 +124,18 @@ let size = ref(20)
 let roleDialogVisible = ref(false)
 let roleDialogType = ref("")
 let roleManage = ref({
+  identity: "",
   name: "",
   sort: 0,
   is_admin: 0,
-  menu_identities: [],
-  func_identities: []
+  menu_identities: []
 })
+const treeRef = ref<InstanceType<typeof ElTree>>()
+const treeProps = {
+  children: "sub_menus",
+  label: "name",
+}
+
 const roleManageRules = reactive({
   name: [
     {
@@ -133,20 +160,50 @@ const roleList = () => {
   })
 }
 roleList()
+const menuList = () => {
+  getMenusList().then((res:any) => {
+    menus.value = res.data
+  })
+}
+menuList()
 
 // dialogType {create: 创建, update: 编辑}
-const showRoleDialog = (dialogType: string) => {
-  roleDialogVisible.value = true
+const showRoleDialog = (dialogType: string, row:any) => {
   roleDialogType.value = dialogType
+  if (dialogType === 'create') {
+    roleManage.value.identity = ""
+  } else {
+    roleManage.value.identity = row.identity
+    setRoleDetail({identity: row.identity}).then((res: any) => {
+      roleManage.value.is_admin = res.data.is_admin
+      roleManage.value.name = res.data.name
+      roleManage.value.sort = res.data.sort
+      roleManage.value.menu_identities = res.data.menu_identities
+      console.log(res.data)
+    })
+  }
+  roleDialogVisible.value = true
 }
 
-// confirmSaveRole 角色提交
+// confirmSaveRole 角色保存
 const confirmSaveRole = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      console.log("RUN ..")
-      console.log(roleManage.value)
+      roleManage.value.menu_identities = treeRef.value!.getCheckedKeys(false)
+      if (roleManage.value.identity) { // 修改
+        setRoleUpdate(roleManage.value).then((res: any) => {
+          ElMessage.success("修改成功")
+          roleDialogVisible.value = false
+          roleList()
+        })
+      } else { // 新增
+        setRoleCreate(roleManage.value).then((res: any) => {
+          ElMessage.success("新增成功")
+          roleDialogVisible.value = false
+          roleList()
+        })
+      }
     }
   })
 }

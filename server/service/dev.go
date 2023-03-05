@@ -43,6 +43,7 @@ func DevMenuAdd(c *gin.Context) {
 		WebIcon:  in.WebIcon,
 		Sort:     in.Sort,
 		Path:     in.Path,
+		Level:    in.Level,
 	}).Error
 	if err != nil {
 		helper.Error("[DB ERROR] : %v", err)
@@ -108,6 +109,8 @@ func DevMenuUpdate(c *gin.Context) {
 		"name":      in.Name,
 		"web_icon":  in.WebIcon,
 		"sort":      in.Sort,
+		"path":      in.Path,
+		"level":     in.Level,
 	}).Error
 	if err != nil {
 		helper.Error("[DB ERROR] : %v", err)
