@@ -7,7 +7,7 @@
   >
     <template v-for="menu in store.userRouters">
       <!-- 无 子菜单 -->
-      <el-menu-item v-if="menu.children == null" :index="menu.path">
+      <el-menu-item v-if="menu.children == null || menu.children.length === 0" :index="menu.path">
         <template v-if="menu.meta">
           <el-icon><component :is="menu.meta.icon"/></el-icon>
         </template>
