@@ -19,6 +19,8 @@ func App() *gin.Engine {
 
 	// 获取菜单列表
 	loginAuth.GET("/menus", service.Menus)
+	// 获取功能列表
+	loginAuth.GET("/functions", service.Functions)
 	// 获取用户信息
 	loginAuth.GET("/user/info", service.UserInfo)
 	// 修改密码

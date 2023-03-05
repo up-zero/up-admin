@@ -14,11 +14,3 @@ type FunctionBasic struct {
 func (table *FunctionBasic) TableName() string {
 	return "function_basic"
 }
-
-// GetFunctionList 获取功能列表
-func GetFunctionList() *gorm.DB {
-	return DB.Model(new(FunctionBasic)).Select("function_basic.identity, mb.identity menu_identity, " +
-		"function_basic.name, function_basic.uri, function_basic.sort").
-		Joins("LEFT JOIN menu_basic mb ON mb.id = function_basic.menu_id").
-		Order("function_basic.sort ASC")
-}

@@ -28,7 +28,7 @@ func SetRoleList(c *gin.Context) {
 		cnt  int64
 		list = make([]*SetRoleListReply, 0)
 	)
-	err = models.GetRoleList(in.KeyWord).Count(&cnt).Offset((in.Page - 1) * in.Size).Limit(in.Size).Find(&list).Error
+	err = models.GetRoleList(in.Keyword).Count(&cnt).Offset((in.Page - 1) * in.Size).Limit(in.Size).Find(&list).Error
 	if err != nil {
 		helper.Info("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{

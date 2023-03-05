@@ -22,3 +22,11 @@ export function devMenuDelete(params) {
         params: params
     })
 }
+
+export function devMenuAdd(data) {
+    return request({
+        url: "/dev/menu/add",
+        method: "post",
+        data
+    })
+}

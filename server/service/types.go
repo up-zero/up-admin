@@ -5,7 +5,7 @@ package service
 type QueryRequest struct {
 	Page    int    `json:"page" form:"page"`
 	Size    int    `json:"size" form:"size"`
-	KeyWord string `json:"key_word" form:"key_word"`
+	Keyword string `json:"key_word" form:"keyword"`
 }
 
 // ------------- COMMON -------------
@@ -104,6 +104,7 @@ type DevMenuAddRequest struct {
 	ParentIdentity string `json:"parent_identity"` // 父级唯一标识，不填默认为顶级菜单
 	Name           string `json:"name"`            // 菜单名称
 	WebIcon        string `json:"web_icon"`        // 网页图标
+	Path           string `json:"path"`            // 路径
 	Sort           int    `json:"sort"`            // 排序
 }
 

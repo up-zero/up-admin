@@ -160,9 +160,11 @@ func TestSetFuncList(t *testing.T) {
 // 新增菜单
 func TestDevMenuAdd(t *testing.T) {
 	data, _ := json.Marshal(map[string]interface{}{
-		"parent_identity": "2",
-		"name":            "新增菜单测试",
+		"parent_identity": "",
+		"name":            "新增顶层菜单测试",
 		"sort":            0,
+		"web_icon":        "Search",
+		"path":            "/path",
 	})
 	resp, err := helper.HttpPost(baseURL+"/dev/menu/add", data, header...)
 	if err != nil {

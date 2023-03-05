@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gitee.com/up-zero/up-admin/helper"
 	"gorm.io/gorm"
 )
 
@@ -52,4 +53,27 @@ func GetRoleFunctionIdentity(roleId uint, isAdmin bool) ([]string, error) {
 	}
 	err := tx.Scan(&data).Error
 	return data, err
+}
+
+// GetRoleFunctions 获取指定角色授权的功能列表
+// roleIdentity 角色唯一标识
+// isAdmin 是否是超管
+func GetRoleFunctions(roleIdentity string, isAdmin bool) *gorm.DB {
+	tx := DB.Model(new(FunctionBasic)).Select("function_basic.identity, mb.identity menu_identity, " +
+		"function_basic.name, function_basic.uri, function_basic.sort").
+		Joins("LEFT JOIN menu_basic mb ON mb.id = function_basic.menu_id")
+	if !isAdmin {
+		// 1. 获取角色ID
+		var roleId int
+		err := DB.Model(new(RoleBasic)).Select("id").Where("identity = ?", roleIdentity).
+			Scan(&roleId).Error
+		if err != nil {
+			helper.Error("[DB ERROR] get role function err: %v", err)
+		}
+		// 2. 获取当前角色授权的功能
+		tx.Joins("LEFT JOIN role_function rf ON rf.function_id = function_basic.id").
+			Where("rf.role_id = ?", roleId)
+	}
+	tx.Order("function_basic.sort ASC")
+	return tx
 }
