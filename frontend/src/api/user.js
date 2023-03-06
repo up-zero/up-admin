@@ -26,3 +26,12 @@ export function setUserList(params) {
         params: params
     })
 }
+
+// 创建管理员
+export function setUserAdd(data) {
+    return request({
+        url: "/set/user/add",
+        method: "post",
+        data
+    })
+}

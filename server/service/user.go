@@ -121,3 +121,58 @@ func SetUserList(c *gin.Context) {
 		},
 	})
 }
+
+// SetUserAdd 管理员创建
+func SetUserAdd(c *gin.Context) {
+	in := new(SetUserAddRequest)
+	err := c.ShouldBindJSON(in)
+	if err != nil {
+		helper.Info("[INPUT ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数异常",
+		})
+		return
+	}
+
+	// 1. 判断用户名是否存在
+	var cnt int64
+	err = models.DB.Model(new(models.UserBasic)).Where("username = ?", in.Username).Count(&cnt).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	if cnt > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "用户已存在",
+		})
+		return
+	}
+
+	// 2. 创建用户数据
+	err = models.DB.Create(&models.UserBasic{
+		Identity:     helper.UUID(),
+		RoleIdentity: in.RoleIdentity,
+		Username:     in.Username,
+		Password:     helper.Md5(in.Password),
+		Phone:        in.Phone,
+	}).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "创建成功",
+	})
+}

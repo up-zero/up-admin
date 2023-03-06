@@ -135,3 +135,10 @@ type SetUserListReply struct {
 	CreatedAt    string `json:"created_at"`
 	UpdatedAt    string `json:"updated_at"`
 }
+
+type SetUserAddRequest struct {
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	Phone        string `json:"phone"`
+	RoleIdentity string `json:"role_identity"`
+}
