@@ -55,6 +55,10 @@ func App() *gin.Engine {
 			"msg":  "Success",
 		})
 	})
+
+	// 管理员管理
+	// 管理员列表
+	auth.GET("/set/user/list", service.SetUserList)
 	// ---------------- END - 设置 ----------------
 
 	// ---------------- BEGIN - dev ----------------

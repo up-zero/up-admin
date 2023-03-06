@@ -80,3 +80,44 @@ func UserPasswordChange(c *gin.Context) {
 		"msg":  "修改成功",
 	})
 }
+
+// SetUserList 管理员列表
+func SetUserList(c *gin.Context) {
+	in := &SetUserListRequest{NewQueryRequest()}
+	err := c.ShouldBindQuery(in)
+	if err != nil {
+		helper.Info("[INPUT ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数异常",
+		})
+		return
+	}
+
+	var (
+		cnt  int64
+		list = make([]*SetUserListReply, 0)
+	)
+	err = models.GetUserList(in.Keyword).Count(&cnt).Offset((in.Page - 1) * in.Size).Limit(in.Size).Find(&list).Error
+	if err != nil {
+		helper.Info("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	for _, v := range list {
+		v.CreatedAt = helper.RFC3339ToNormalTime(v.CreatedAt)
+		v.UpdatedAt = helper.RFC3339ToNormalTime(v.UpdatedAt)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "加载成功",
+		"data": gin.H{
+			"list":  list,
+			"count": cnt,
+		},
+	})
+}

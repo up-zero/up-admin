@@ -121,3 +121,17 @@ type DevFuncUpdateRequest struct {
 	Identity string `json:"identity"` // 功能唯一标识，必填
 	DevFuncAddRequest
 }
+
+type SetUserListRequest struct {
+	*QueryRequest
+}
+
+type SetUserListReply struct {
+	Identity     string `json:"identity"`
+	Username     string `json:"username"`
+	RoleIdentity string `json:"role_identity"`
+	RoleName     string `json:"role_name"`
+	Phone        string `json:"phone"`
+	CreatedAt    string `json:"created_at"`
+	UpdatedAt    string `json:"updated_at"`
+}
