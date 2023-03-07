@@ -35,3 +35,21 @@ export function setUserAdd(data) {
         data
     })
 }
+
+// 修改管理员
+export function setUserUpdate(data) {
+    return request({
+        url: "/set/user/update",
+        method: "put",
+        data
+    })
+}
+
+// 删除管理员
+export function setUserDelete(params) {
+    return request({
+        url: "/set/user/delete",
+        method: "delete",
+        params: params
+    })
+}

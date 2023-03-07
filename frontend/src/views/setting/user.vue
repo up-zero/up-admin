@@ -6,28 +6,30 @@
       </el-col>
       <!-- 角色列表搜索 -->
       <el-col :span="6">
-        <el-input size="large" v-model="keyword" placeholder="请输入管理员名称" />
+        <el-input size="large" v-model="keyword" placeholder="请输入管理员名称"/>
       </el-col>
       <el-col :span="2">
         <el-button size="large" type="primary" :icon="Search" @click="userList">搜索</el-button>
       </el-col>
     </el-row>
     <el-table :data="users" border style="width: 100%">
-      <el-table-column prop="username" label="管理员名称" />
-      <el-table-column prop="role_name" label="角色名称" />
-      <el-table-column prop="phone" label="手机号" />
-      <el-table-column prop="created_at" label="创建时间" />
-      <el-table-column prop="updated_at" label="更新时间" />
+      <el-table-column prop="username" label="管理员名称"/>
+      <el-table-column prop="role_name" label="角色名称"/>
+      <el-table-column prop="phone" label="手机号"/>
+      <el-table-column prop="created_at" label="创建时间"/>
+      <el-table-column prop="updated_at" label="更新时间"/>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button size="small" @click="showRoleDialog('edit', scope.row)"
-          >编辑</el-button
+          <el-button size="small" @click="showUserDialog('edit', scope.row)"
+          >编辑
+          </el-button
           >
           <el-button
               size="small"
               type="danger"
-              @click="handleRoleDelete(scope.row)"
-          >删除</el-button
+              @click="handleUserDelete(scope.row)"
+          >删除
+          </el-button
           >
         </template>
       </el-table-column>
@@ -77,13 +79,24 @@
             label="管理员角色"
             :rules="userManageRules.role_identity"
         >
-          <el-select
-              v-model="userManage.role_identity"
-              filterable
-              remote
-              reserve-keyword
-              placeholder="请输入角色名称"
-              :remote-method="roleList"
+          <el-select v-if="preRoles.length > 0"
+                     v-model="userManage.role_identity"
+                     filterable
+                     remote
+                     reserve-keyword
+                     placeholder="请输入角色名称"
+                     :remote-method="roleList"
+          >
+            <el-option v-for="item in preRoles" :key="item.identity" :label="item.name"
+                       :value="item.identity"/>
+          </el-select>
+          <el-select v-else
+                     v-model="userManage.role_identity"
+                     filterable
+                     remote
+                     reserve-keyword
+                     placeholder="请输入角色名称"
+                     :remote-method="roleList"
           >
             <el-option
                 v-for="item in roles"
@@ -105,11 +118,11 @@
 </template>
 
 <script lang="ts" setup>
-import {setUserList, setUserAdd} from '@/api/user'
+import {setUserAdd, setUserDelete, setUserList, setUserUpdate} from '@/api/user'
 import {getRoleList} from '@/api/role'
 import {reactive, ref} from "vue";
-import {ElMessage} from "element-plus";
 import type {FormInstance} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 let roles = ref()
 let users = ref()
@@ -127,6 +140,7 @@ let userManage = ref({
   phone: "",
   role_identity: ""
 })
+let preRoles = ref([])
 
 const userManageRules = reactive({
   username: [
@@ -154,14 +168,14 @@ const userList = () => {
 userList()
 
 const roleList = (roleKeyword: string) => {
+  preRoles.value = []
   getRoleList({size: 100, keyword: roleKeyword}).then((res: any) => {
     roles.value = res.data.list
-    console.log(res.data.list)
   })
 }
 
 // dialogType {create: 创建, update: 编辑}
-const showUserDialog = (dialogType: string, row:any) => {
+const showUserDialog = (dialogType: string, row: any) => {
   userDialogType.value = dialogType
   if (dialogType === 'create') {
     userManage.value.identity = ""
@@ -170,6 +184,11 @@ const showUserDialog = (dialogType: string, row:any) => {
     userManage.value.username = row.username
     userManage.value.phone = row.phone
     userManage.value.role_identity = row.role_identity
+    preRoles.value = [{
+      identity: row.role_identity,
+      name: row.role_name,
+    }]
+    console.log(preRoles.value)
   }
   userDialogVisible.value = true
 }
@@ -189,12 +208,33 @@ const confirmSaveUser = (formEl: FormInstance | undefined) => {
           userList()
         })
       } else { // 修改
-        //
+        setUserUpdate(userManage.value).then((res: any) => {
+          ElMessage.success("修改成功")
+          userDialogVisible.value = false
+          userList()
+        })
       }
     }
   })
 }
 
+const handleUserDelete = (row: any) => {
+  ElMessageBox.confirm("确认删除当前用户么？", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    autofocus: false,
+  }).then(() => {
+    setUserDelete({identity: row.identity}).then((res: any) => {
+      ElMessage({
+        message: "删除成功",
+        type: 'success',
+      })
+      userList()
+    }).catch(() => {
+    })
+  }).catch(() => {
+  })
+}
 </script>
 
 <style scoped>

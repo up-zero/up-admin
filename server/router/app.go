@@ -61,6 +61,10 @@ func App() *gin.Engine {
 	auth.GET("/set/user/list", service.SetUserList)
 	// 新增管理员
 	auth.POST("/set/user/add", service.SetUserAdd)
+	// 修改管理员
+	auth.PUT("/set/user/update", service.SetUserUpdate)
+	// 删除管理员
+	auth.DELETE("/set/user/delete", service.SetUserDelete)
 	// ---------------- END - 设置 ----------------
 
 	// ---------------- BEGIN - dev ----------------

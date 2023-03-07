@@ -176,3 +176,81 @@ func SetUserAdd(c *gin.Context) {
 		"msg":  "创建成功",
 	})
 }
+
+// SetUserUpdate 管理员修改
+func SetUserUpdate(c *gin.Context) {
+	in := new(SetUserUpdateRequest)
+	err := c.ShouldBindJSON(in)
+	if err != nil {
+		helper.Info("[INPUT ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数异常",
+		})
+		return
+	}
+
+	// 1. 判断用户名是否已存在
+	var cnt int64
+	err = models.DB.Model(new(models.UserBasic)).Where("identity != ? AND username = ?", in.Identity, in.Username).Count(&cnt).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	if cnt > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "用户已存在",
+		})
+		return
+	}
+	// 2. 修改数据
+	err = models.DB.Model(new(models.UserBasic)).Where("identity = ?", in.Identity).Updates(map[string]any{
+		"role_identity": in.RoleIdentity,
+		"username":      in.Username,
+		"phone":         in.Phone,
+	}).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "修改成功",
+	})
+}
+
+// SetUserDelete 管理员删除
+func SetUserDelete(c *gin.Context) {
+	identity := c.Query("identity")
+	if identity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "必填参不能为空",
+		})
+		return
+	}
+	// 删除管理员
+	err := models.DB.Where("identity = ?", identity).Delete(new(models.UserBasic)).Error
+	if err != nil {
+		helper.Error("[DB ERROR] : %v", err)
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "数据库异常",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "删除成功",
+	})
+}

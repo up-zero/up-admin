@@ -142,3 +142,8 @@ type SetUserAddRequest struct {
 	Phone        string `json:"phone"`
 	RoleIdentity string `json:"role_identity"`
 }
+
+type SetUserUpdateRequest struct {
+	Identity string `json:"identity"`
+	SetUserAddRequest
+}
