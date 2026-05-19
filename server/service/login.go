@@ -36,7 +36,7 @@ func LoginPassword(c *gin.Context) {
 	}
 
 	// 生成 token
-	token, err := helper.GenerateToken(ub.ID, ub.Identity, ub.Username, ub.RoleIdentity, define.TokenExpire)
+	token, err := helper.GenerateToken(ub.ID, ub.Identity, ub.Username, ub.RoleIdentity, define.TokenExpireAt())
 	if err != nil {
 		helper.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
@@ -46,7 +46,7 @@ func LoginPassword(c *gin.Context) {
 		return
 	}
 	// 生成 token
-	refreshToken, err := helper.GenerateToken(ub.ID, ub.Identity, ub.Username, ub.RoleIdentity, define.RefreshTokenExpire)
+	refreshToken, err := helper.GenerateToken(ub.ID, ub.Identity, ub.Username, ub.RoleIdentity, define.RefreshTokenExpireAt())
 	if err != nil {
 		helper.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{

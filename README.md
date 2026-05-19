@@ -25,7 +25,7 @@ npm run dev
 ## 项目介绍
 
 + 角色管理
-![img.png](doc/img/角色管理.png)
+![img.png](assets/img/角色管理.png)
 
 + 菜单管理
-![img.png](doc/img/菜单管理.png)
+![img.png](assets/img/菜单管理.png)
