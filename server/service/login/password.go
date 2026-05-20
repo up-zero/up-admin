@@ -2,12 +2,14 @@ package login
 
 import (
 	"errors"
+	"net/http"
+
 	"gitee.com/up-zero/up-admin/define"
 	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
 	"gitee.com/up-zero/up-admin/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 // Password 用户名密码登录
@@ -15,7 +17,7 @@ func Password(c *gin.Context) {
 	in := new(PasswordRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  err.Error(),
@@ -38,7 +40,7 @@ func Password(c *gin.Context) {
 	// 生成 token
 	token, err := helper.GenerateToken(ub.ID, ub.Identity, ub.Username, ub.RoleIdentity, define.TokenExpireAt())
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  err.Error(),
@@ -48,7 +50,7 @@ func Password(c *gin.Context) {
 	// 生成 token
 	refreshToken, err := helper.GenerateToken(ub.ID, ub.Identity, ub.Username, ub.RoleIdentity, define.RefreshTokenExpireAt())
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  err.Error(),

@@ -2,12 +2,14 @@ package middleware
 
 import (
 	"context"
-	"gitee.com/up-zero/up-admin/define"
-	"gitee.com/up-zero/up-admin/helper"
-	"gitee.com/up-zero/up-admin/models"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"gitee.com/up-zero/up-admin/define"
+	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
+	"gitee.com/up-zero/up-admin/models"
+	"github.com/gin-gonic/gin"
 )
 
 // LoginAuthCheck 登录信息认证
@@ -37,7 +39,7 @@ func LoginAuthCheck() gin.HandlerFunc {
 				err = models.DB.Model(new(models.RoleBasic)).Select("is_admin").
 					Where("identity = ?", userClaim.RoleIdentity).Find(roleBasic).Error
 				if err != nil {
-					helper.Error("[DB ERROR] : %v", err)
+					logger.Error("[DB ERROR] : %v", err)
 					c.Abort()
 					c.JSON(http.StatusOK, gin.H{
 						"code": -1,
@@ -92,7 +94,7 @@ func FuncAuthCheck() gin.HandlerFunc {
 				// key不存在，从DB中查询数据，并保存
 				data, err := models.GetAuthFuncUri(userClaim.RoleIdentity)
 				if err != nil {
-					helper.Error("[DB ERROR] : %v", err)
+					logger.Error("[DB ERROR] : %v", err)
 					c.Abort()
 					c.JSON(http.StatusOK, gin.H{
 						"code": -1,
@@ -104,7 +106,7 @@ func FuncAuthCheck() gin.HandlerFunc {
 				}
 				err = models.RDB.HSet(context.Background(), funcKey, data).Err()
 				if err != nil {
-					helper.Error("[DB ERROR] : %v", err)
+					logger.Error("[DB ERROR] : %v", err)
 					c.Abort()
 					c.JSON(http.StatusOK, gin.H{
 						"code": -1,

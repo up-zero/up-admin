@@ -1,11 +1,12 @@
 package service
 
 import (
+	"net/http"
+
 	"gitee.com/up-zero/up-admin/define"
-	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
 	"gitee.com/up-zero/up-admin/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func Functions(c *gin.Context) {
@@ -17,7 +18,7 @@ func SetFuncList(c *gin.Context) {
 	data := make([]*SetFuncListReply, 0)
 	err := models.GetRoleFunctions(userClaim.RoleIdentity, userClaim.IsAdmin).Find(&data).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",

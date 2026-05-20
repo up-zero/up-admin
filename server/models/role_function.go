@@ -1,7 +1,7 @@
 package models
 
 import (
-	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
 	"gorm.io/gorm"
 )
 
@@ -68,7 +68,7 @@ func GetRoleFunctions(roleIdentity string, isAdmin bool) *gorm.DB {
 		err := DB.Model(new(RoleBasic)).Select("id").Where("identity = ?", roleIdentity).
 			Scan(&roleId).Error
 		if err != nil {
-			helper.Error("[DB ERROR] get role function err: %v", err)
+			logger.Error("[DB ERROR] get role function err: %v", err)
 		}
 		// 2. 获取当前角色授权的功能
 		tx.Joins("LEFT JOIN role_function rf ON rf.function_id = function_basic.id").

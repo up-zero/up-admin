@@ -1,15 +1,16 @@
 package router
 
 import (
+	"net/http"
+
 	"gitee.com/up-zero/up-admin/middleware"
 	"gitee.com/up-zero/up-admin/service"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func App() *gin.Engine {
-	r := gin.Default()
-	r.Use(middleware.Cors())
+	r := gin.New()
+	r.Use(middleware.GinLogger(), middleware.GinRecovery(), middleware.Cors())
 	// 登录
 	// 用户名、密码登录
 	r.POST("/login/password", service.LoginPassword)

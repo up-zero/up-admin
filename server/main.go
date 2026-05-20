@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"log"
 
 	"gitee.com/up-zero/up-admin/define"
+	"gitee.com/up-zero/up-admin/logger"
 	"gitee.com/up-zero/up-admin/models"
 	"gitee.com/up-zero/up-admin/router"
 )
@@ -18,6 +18,13 @@ func main() {
 	if err := define.InitConfig(configFile); err != nil {
 		panic(err)
 	}
+	// 初始化日志
+	if err := logger.InitLogger(define.CurrentConfig()); err != nil {
+		panic(err)
+	}
+	define.RegisterConfigReloadHandler(func(oldConfig, newConfig define.Config) error {
+		return logger.InitLogger(newConfig)
+	})
 	// 初始化数据源
 	if err := models.ReloadDatastores(define.CurrentConfig()); err != nil {
 		panic(err)
@@ -25,7 +32,7 @@ func main() {
 	define.RegisterConfigReloadHandler(func(oldConfig, newConfig define.Config) error {
 		if oldConfig.Database == newConfig.Database && oldConfig.Redis == newConfig.Redis {
 			if oldConfig.Server.Port != newConfig.Server.Port {
-				log.Printf("检测到 server.port 变更为 %s，将在下次重启后生效", newConfig.Server.Port)
+				logger.Info("检测到 server.port 变更为 %s，将在下次重启后生效", newConfig.Server.Port)
 			}
 			return nil
 		}
@@ -33,7 +40,7 @@ func main() {
 			return err
 		}
 		if oldConfig.Server.Port != newConfig.Server.Port {
-			log.Printf("检测到 server.port 变更为 %s，将在下次重启后生效", newConfig.Server.Port)
+			logger.Info("检测到 server.port 变更为 %s，将在下次重启后生效", newConfig.Server.Port)
 		}
 		return nil
 	})

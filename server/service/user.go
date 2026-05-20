@@ -1,11 +1,13 @@
 package service
 
 import (
+	"net/http"
+
 	"gitee.com/up-zero/up-admin/define"
 	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
 	"gitee.com/up-zero/up-admin/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // UserInfo 获取用户信息
@@ -15,7 +17,7 @@ func UserInfo(c *gin.Context) {
 
 	err := models.GetUserInfo(userClaim.Identity).Find(data).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "网络异常",
@@ -34,7 +36,7 @@ func UserPasswordChange(c *gin.Context) {
 	in := new(UserPasswordChangeRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -48,7 +50,7 @@ func UserPasswordChange(c *gin.Context) {
 	err = models.DB.Model(new(models.UserBasic)).
 		Where("identity = ? AND password = ?", userClaim.Identity, helper.Md5(in.OldPassword)).Count(&cnt).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "网络异常",
@@ -67,7 +69,7 @@ func UserPasswordChange(c *gin.Context) {
 	err = models.DB.Model(new(models.UserBasic)).Where("identity = ?", userClaim.Identity).
 		Updates(map[string]interface{}{"password": helper.Md5(in.NewPassword)}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "网络异常",
@@ -86,7 +88,7 @@ func SetUserList(c *gin.Context) {
 	in := &SetUserListRequest{NewQueryRequest()}
 	err := c.ShouldBindQuery(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -100,7 +102,7 @@ func SetUserList(c *gin.Context) {
 	)
 	err = models.GetUserList(in.Keyword).Count(&cnt).Offset((in.Page - 1) * in.Size).Limit(in.Size).Find(&list).Error
 	if err != nil {
-		helper.Info("[DB ERROR] : %v", err)
+		logger.Info("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -127,7 +129,7 @@ func SetUserAdd(c *gin.Context) {
 	in := new(SetUserAddRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -139,7 +141,7 @@ func SetUserAdd(c *gin.Context) {
 	var cnt int64
 	err = models.DB.Model(new(models.UserBasic)).Where("username = ?", in.Username).Count(&cnt).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -163,7 +165,7 @@ func SetUserAdd(c *gin.Context) {
 		Phone:        in.Phone,
 	}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -182,7 +184,7 @@ func SetUserUpdate(c *gin.Context) {
 	in := new(SetUserUpdateRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -194,7 +196,7 @@ func SetUserUpdate(c *gin.Context) {
 	var cnt int64
 	err = models.DB.Model(new(models.UserBasic)).Where("identity != ? AND username = ?", in.Identity, in.Username).Count(&cnt).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -215,7 +217,7 @@ func SetUserUpdate(c *gin.Context) {
 		"phone":         in.Phone,
 	}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -241,7 +243,7 @@ func SetUserDelete(c *gin.Context) {
 	// 删除管理员
 	err := models.DB.Where("identity = ?", identity).Delete(new(models.UserBasic)).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",

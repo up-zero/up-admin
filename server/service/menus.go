@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"gitee.com/up-zero/up-admin/define"
-	"gitee.com/up-zero/up-admin/helper"
-	"gitee.com/up-zero/up-admin/models"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"gitee.com/up-zero/up-admin/define"
+	"gitee.com/up-zero/up-admin/logger"
+	"gitee.com/up-zero/up-admin/models"
+	"github.com/gin-gonic/gin"
 )
 
 // Menus 获取菜单列表
@@ -27,7 +28,7 @@ func Menus(c *gin.Context) {
 		fmt.Println("RUN", err.Error())
 		tx, err := models.GetRoleMenus(userClaim.RoleIdentity, userClaim.IsAdmin)
 		if err != nil {
-			helper.Error("[DB ERROR] : %v", err)
+			logger.Error("[DB ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "数据异常",
@@ -36,7 +37,7 @@ func Menus(c *gin.Context) {
 		}
 		err = tx.Find(&roleMenus).Error
 		if err != nil {
-			helper.Error("[DB ERROR] : %v", err)
+			logger.Error("[DB ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "数据异常",
@@ -51,7 +52,7 @@ func Menus(c *gin.Context) {
 	} else {
 		err = json.Unmarshal([]byte(res), &data)
 		if err != nil {
-			helper.Error("[Unmarshal ERROR] : %v", err)
+			logger.Error("[Unmarshal ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "数据异常",

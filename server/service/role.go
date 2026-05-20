@@ -2,13 +2,15 @@ package service
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	"gitee.com/up-zero/up-admin/define"
 	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
 	"gitee.com/up-zero/up-admin/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
-	"time"
 )
 
 // SetRoleList 角色列表
@@ -16,7 +18,7 @@ func SetRoleList(c *gin.Context) {
 	in := &SetRoleListRequest{NewQueryRequest()}
 	err := c.ShouldBindQuery(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -30,7 +32,7 @@ func SetRoleList(c *gin.Context) {
 	)
 	err = models.GetRoleList(in.Keyword).Count(&cnt).Offset((in.Page - 1) * in.Size).Limit(in.Size).Find(&list).Error
 	if err != nil {
-		helper.Info("[DB ERROR] : %v", err)
+		logger.Info("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -57,7 +59,7 @@ func SetRoleUpdateAdmin(c *gin.Context) {
 	in := new(SetRoleUpdateAdminRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -69,7 +71,7 @@ func SetRoleUpdateAdmin(c *gin.Context) {
 	adminRoleKey := define.RedisRoleAdminPrefix + userClaim.RoleIdentity
 	err = models.RDB.Del(context.Background(), adminRoleKey).Err()
 	if err != nil {
-		helper.Info("[RDB ERROR] : %v", err)
+		logger.Info("[RDB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "缓存异常",
@@ -79,7 +81,7 @@ func SetRoleUpdateAdmin(c *gin.Context) {
 	err = models.DB.Model(new(models.RoleBasic)).Where("identity = ?", in.Identity).
 		Updates(map[string]interface{}{"is_admin": in.IsAdmin}).Error
 	if err != nil {
-		helper.Info("[RDB ERROR] : %v", err)
+		logger.Info("[RDB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -91,7 +93,7 @@ func SetRoleUpdateAdmin(c *gin.Context) {
 		time.Sleep(time.Millisecond * 200)
 		err = models.RDB.Del(context.Background(), adminRoleKey).Err()
 		if err != nil {
-			helper.Info("[RDB ERROR] : %v", err)
+			logger.Info("[RDB ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "缓存异常",
@@ -111,7 +113,7 @@ func SetRoleCreate(c *gin.Context) {
 	in := new(SetRoleCreateRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -126,7 +128,7 @@ func SetRoleCreate(c *gin.Context) {
 	err = models.DB.Model(new(models.MenuBasic)).Select("id").
 		Where("identity IN ?", in.MenuIdentities).Scan(&menuIds).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -168,7 +170,7 @@ func SetRoleCreate(c *gin.Context) {
 		return nil
 	})
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -195,7 +197,7 @@ func SetRoleDelete(c *gin.Context) {
 	var cnt int64
 	err := models.DB.Model(new(models.UserBasic)).Where("role_identity = ?", identity).Count(&cnt).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -212,7 +214,7 @@ func SetRoleDelete(c *gin.Context) {
 	// 删除角色
 	err = models.DB.Where("identity = ?", identity).Delete(new(models.RoleBasic)).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -231,7 +233,7 @@ func SetRoleUpdate(c *gin.Context) {
 	in := new(SetRoleUpdateRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Info("[INPUT ERROR] : %v", err)
+		logger.Info("[INPUT ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -247,7 +249,7 @@ func SetRoleUpdate(c *gin.Context) {
 	err = models.DB.Model(new(models.MenuBasic)).Select("id").
 		Where("identity IN ?", in.MenuIdentities).Scan(&menuIds).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -258,7 +260,7 @@ func SetRoleUpdate(c *gin.Context) {
 	err = models.DB.Model(new(models.RoleBasic)).Select("id").
 		Where("identity = ?", in.Identity).Find(rb).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -277,7 +279,7 @@ func SetRoleUpdate(c *gin.Context) {
 	// Redis Key 删除
 	err = redisRoleDelete(in.Identity)
 	if err != nil {
-		helper.Info("[RDB ERROR] : %v", err)
+		logger.Info("[RDB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "缓存异常",
@@ -312,7 +314,7 @@ func SetRoleUpdate(c *gin.Context) {
 		return nil
 	})
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -324,7 +326,7 @@ func SetRoleUpdate(c *gin.Context) {
 		time.Sleep(time.Millisecond * 200)
 		err = redisRoleDelete(in.Identity)
 		if err != nil {
-			helper.Info("[RDB ERROR] : %v", err)
+			logger.Info("[RDB ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "缓存异常",
@@ -353,7 +355,7 @@ func SetRoleDetail(c *gin.Context) {
 	// 1. 获取角色基本信息
 	rb, err := models.GetRoleBasic(identity)
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -367,7 +369,7 @@ func SetRoleDetail(c *gin.Context) {
 	// 2. 获取授权的菜单
 	menuIdentities, err := models.GetRoleMenuIdentity(rb.ID, rb.IsAdmin == 1)
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",

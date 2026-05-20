@@ -20,6 +20,7 @@ type Config struct {
 	App      AppConfig      `mapstructure:"app"`
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
+	Log      LogConfig      `mapstructure:"log"`
 	Redis    RedisConfig    `mapstructure:"redis"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
 }
@@ -36,6 +37,16 @@ type ServerConfig struct {
 
 type DatabaseConfig struct {
 	DSN string `mapstructure:"dsn"`
+}
+
+type LogConfig struct {
+	Path       string `mapstructure:"path"`        // 日志文件路径
+	Level      string `mapstructure:"level"`       // 日志级别（debug、info、warn、error）
+	MaxSize    int    `mapstructure:"max_size"`    // 单个日志文件最大体积，单位 MB
+	MaxBackups int    `mapstructure:"max_backups"` // 历史日志文件保留数量
+	MaxAge     int    `mapstructure:"max_age"`     // 历史日志保留天数
+	Compress   bool   `mapstructure:"compress"`    // 是否压缩旧日志文件
+	Console    bool   `mapstructure:"console"`     // 是否输出到控制台
 }
 
 type RedisConfig struct {
@@ -152,6 +163,13 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("app.default_size", 20)
 	v.SetDefault("server.port", ":9090")
 	v.SetDefault("database.dsn", "")
+	v.SetDefault("log.path", "logs/up-admin.log")
+	v.SetDefault("log.level", "info")
+	v.SetDefault("log.max_size", 100)
+	v.SetDefault("log.max_backups", 7)
+	v.SetDefault("log.max_age", 30)
+	v.SetDefault("log.compress", false)
+	v.SetDefault("log.console", true)
 	v.SetDefault("redis.addr", "127.0.0.1:6379")
 	v.SetDefault("redis.username", "")
 	v.SetDefault("redis.password", "")
@@ -241,6 +259,27 @@ func normalizeConfig(cfg Config) (runtimeConfig, error) {
 		return runtimeConfig{}, fmt.Errorf("database.dsn 不能为空")
 	}
 
+	logPath := strings.TrimSpace(cfg.Log.Path)
+	if logPath == "" {
+		logPath = "logs/up-admin.log"
+	}
+	logLevel := strings.TrimSpace(cfg.Log.Level)
+	if logLevel == "" {
+		logLevel = "info"
+	}
+	logMaxSize := cfg.Log.MaxSize
+	if logMaxSize <= 0 {
+		logMaxSize = 100
+	}
+	logMaxBackups := cfg.Log.MaxBackups
+	if logMaxBackups <= 0 {
+		logMaxBackups = 7
+	}
+	logMaxAge := cfg.Log.MaxAge
+	if logMaxAge <= 0 {
+		logMaxAge = 30
+	}
+
 	jwtKey := strings.TrimSpace(cfg.JWT.Key)
 	if jwtKey == "" {
 		return runtimeConfig{}, fmt.Errorf("jwt.key 不能为空")
@@ -302,6 +341,15 @@ func normalizeConfig(cfg Config) (runtimeConfig, error) {
 			},
 			Database: DatabaseConfig{
 				DSN: dsn,
+			},
+			Log: LogConfig{
+				Path:       logPath,
+				Level:      logLevel,
+				MaxSize:    logMaxSize,
+				MaxBackups: logMaxBackups,
+				MaxAge:     logMaxAge,
+				Compress:   cfg.Log.Compress,
+				Console:    cfg.Log.Console,
 			},
 			Redis: RedisConfig{
 				Addr:            redisAddr,

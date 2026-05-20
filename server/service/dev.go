@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"net/http"
+
 	"gitee.com/up-zero/up-admin/define"
 	"gitee.com/up-zero/up-admin/helper"
+	"gitee.com/up-zero/up-admin/logger"
 	"gitee.com/up-zero/up-admin/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // DevMenuAdd 新增菜单
@@ -14,7 +16,7 @@ func DevMenuAdd(c *gin.Context) {
 	in := new(DevMenuAddRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -27,7 +29,7 @@ func DevMenuAdd(c *gin.Context) {
 		err = models.DB.Model(new(models.MenuBasic)).Select("id").
 			Where("identity = ?", in.ParentIdentity).Scan(&parentId).Error
 		if err != nil {
-			helper.Error("[DB ERROR] : %v", err)
+			logger.Error("[DB ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "数据库异常",
@@ -46,7 +48,7 @@ func DevMenuAdd(c *gin.Context) {
 		Level:    in.Level,
 	}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -56,7 +58,7 @@ func DevMenuAdd(c *gin.Context) {
 	// 3. 清空菜单缓存数据
 	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix).Err()
 	if err != nil {
-		helper.Error("[RDB ERROR] : %v", err)
+		logger.Error("[RDB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "缓存异常",
@@ -75,7 +77,7 @@ func DevMenuUpdate(c *gin.Context) {
 	in := new(DevMenuUpdateRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -95,7 +97,7 @@ func DevMenuUpdate(c *gin.Context) {
 		err = models.DB.Model(new(models.MenuBasic)).Select("id").
 			Where("identity = ?", in.ParentIdentity).Scan(&parentId).Error
 		if err != nil {
-			helper.Error("[DB ERROR] : %v", err)
+			logger.Error("[DB ERROR] : %v", err)
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
 				"msg":  "数据库异常",
@@ -113,7 +115,7 @@ func DevMenuUpdate(c *gin.Context) {
 		"level":     in.Level,
 	}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -123,7 +125,7 @@ func DevMenuUpdate(c *gin.Context) {
 	// 3. 清空菜单缓存数据
 	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix).Err()
 	if err != nil {
-		helper.Error("[RDB ERROR] : %v", err)
+		logger.Error("[RDB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "缓存异常",
@@ -150,7 +152,7 @@ func DevMenuDelete(c *gin.Context) {
 	// 1. 删除数据库中的数据
 	err := models.DB.Where("identity = ?", identity).Delete(new(models.MenuBasic)).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -160,7 +162,7 @@ func DevMenuDelete(c *gin.Context) {
 	// 2. 清空菜单缓存数据
 	err = models.RDB.Del(context.Background(), define.RedisMenuPrefix).Err()
 	if err != nil {
-		helper.Error("[RDB ERROR] : %v", err)
+		logger.Error("[RDB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "缓存异常",
@@ -179,7 +181,7 @@ func DevFuncAdd(c *gin.Context) {
 	in := new(DevFuncAddRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -198,7 +200,7 @@ func DevFuncAdd(c *gin.Context) {
 	err = models.DB.Model(new(models.MenuBasic)).Select("id").
 		Where("identity = ?", in.MenuIdentity).Scan(&menuId).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -214,7 +216,7 @@ func DevFuncAdd(c *gin.Context) {
 		Sort:     in.Sort,
 	}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -233,7 +235,7 @@ func DevFuncUpdate(c *gin.Context) {
 	in := new(DevFuncUpdateRequest)
 	err := c.ShouldBindJSON(in)
 	if err != nil {
-		helper.Error("[BindJSON ERROR] : %v", err)
+		logger.Error("[BindJSON ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "参数异常",
@@ -252,7 +254,7 @@ func DevFuncUpdate(c *gin.Context) {
 	err = models.DB.Model(new(models.MenuBasic)).Select("id").
 		Where("identity = ?", in.MenuIdentity).Scan(&menuId).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -267,7 +269,7 @@ func DevFuncUpdate(c *gin.Context) {
 		"sort":    in.Sort,
 	}).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
@@ -292,7 +294,7 @@ func DevFuncDelete(c *gin.Context) {
 	}
 	err := models.DB.Where("identity = ?", identity).Delete(new(models.FunctionBasic)).Error
 	if err != nil {
-		helper.Error("[DB ERROR] : %v", err)
+		logger.Error("[DB ERROR] : %v", err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "数据库异常",
